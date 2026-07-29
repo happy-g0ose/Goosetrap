@@ -305,28 +305,35 @@ namespace Goosetrap.UI.ViewModels.Settings
             try
             {
                 // First try to get Universe ID, then Universe Name (e.g. "Pet Simulator 99" instead of "Fantasy World")
-                string url1 = $"https://games.roblox.com/v1/games/multiget-place-details?placeIds={client.PlaceId}";
-                string json1 = await App.HttpClient.GetStringAsync(url1);
-                using var doc1 = JsonDocument.Parse(json1);
-                var root1 = doc1.RootElement;
-                if (root1.ValueKind == JsonValueKind.Array && root1.GetArrayLength() > 0)
+                try
                 {
-                    long universeId = root1[0].GetProperty("universeId").GetInt64();
-                    
-                    string url2 = $"https://games.roblox.com/v1/games?universeIds={universeId}";
-                    string json2 = await App.HttpClient.GetStringAsync(url2);
-                    using var doc2 = JsonDocument.Parse(json2);
-                    var root2 = doc2.RootElement;
-                    if (root2.TryGetProperty("data", out var dataProp) && dataProp.ValueKind == JsonValueKind.Array && dataProp.GetArrayLength() > 0)
+                    string url1 = $"https://games.roblox.com/v1/games/multiget-place-details?placeIds={client.PlaceId}";
+                    string json1 = await App.HttpClient.GetStringAsync(url1);
+                    using var doc1 = JsonDocument.Parse(json1);
+                    var root1 = doc1.RootElement;
+                    if (root1.ValueKind == JsonValueKind.Array && root1.GetArrayLength() > 0)
                     {
-                        string name = dataProp[0].GetProperty("name").GetString();
-                        if (!string.IsNullOrEmpty(name))
+                        long universeId = root1[0].GetProperty("universeId").GetInt64();
+                        
+                        string url2 = $"https://games.roblox.com/v1/games?universeIds={universeId}";
+                        string json2 = await App.HttpClient.GetStringAsync(url2);
+                        using var doc2 = JsonDocument.Parse(json2);
+                        var root2 = doc2.RootElement;
+                        if (root2.TryGetProperty("data", out var dataProp) && dataProp.ValueKind == JsonValueKind.Array && dataProp.GetArrayLength() > 0)
                         {
-                            GameNameCache[client.PlaceId] = name;
-                            client.GameName = name;
-                            return;
+                            string name = dataProp[0].GetProperty("name").GetString();
+                            if (!string.IsNullOrEmpty(name))
+                            {
+                                GameNameCache[client.PlaceId] = name;
+                                client.GameName = name;
+                                return;
+                            }
                         }
                     }
+                }
+                catch (Exception)
+                {
+                    // Ignore exceptions here so we can fallback to the economy API
                 }
 
                 // Fallback to place name if universe fetch fails
