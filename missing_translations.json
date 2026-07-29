@@ -1,0 +1,418 @@
+﻿[
+    {
+        "Key":  "ContextMenu.ServerInformation.Uptime",
+        "English":  "Estimated uptime"
+    },
+    {
+        "Key":  "ContextMenu.ServerInformationUptimeAndLocation.Notification.Text",
+        "English":  "Location: {0}\nEstimated uptime: {1}"
+    },
+    {
+        "Key":  "ContextMenu.ServerInformationUptime.Notification.Text",
+        "English":  "Estimated uptime: {0}\nClick for more information"
+    },
+    {
+        "Key":  "Menu.Integrations.QueryServerUptime.Description",
+        "English":  "Displays the server’s estimated uptime using data from [RoValra\u0027s APIs]({0}). [RoValra\u0027s privacy policy]({0}/privacy) applies."
+    },
+    {
+        "Key":  "Menu.Integrations.QueryServerUptime.Title",
+        "English":  "Query server uptime"
+    },
+    {
+        "Key":  "LaunchMenu.Discord",
+        "English":  "Join our Discord server"
+    },
+    {
+        "Key":  "Enums.FlagPresets.RenderingMode.OpenGL",
+        "English":  "OpenGL"
+    },
+    {
+        "Key":  "Enums.FlagPresets.RenderingMode.Vulkan",
+        "English":  "Vulkan"
+    },
+    {
+        "Key":  "Common_FastFlags",
+        "English":  "Fast Flag Editor"
+    },
+    {
+        "Key":  "Menu.Load",
+        "English":  "Load"
+    },
+    {
+        "Key":  "Bootstrapper.Status.CancelUpgrade",
+        "English":  "Cancelling Roblox upgrade."
+    },
+    {
+        "Key":  "Menu.Behaviour.Channel.Title",
+        "English":  "Channel"
+    },
+    {
+        "Key":  "Menu.Channel.RobloxUpgrades.Description",
+        "English":  "When disabled Roblox client won\u0027t upgrade to newer version."
+    },
+    {
+        "Key":  "Bootstrapper.Status.Downloading",
+        "English":  "Downloading"
+    },
+    {
+        "Key":  "Menu.Appearance.BootstrapperDownloading.Title",
+        "English":  "Bootstrapper downloading status"
+    },
+    {
+        "Key":  "Menu.Appearance.BootstrapperDownloading.Description",
+        "English":  "Change downloading string. {0} is package name, {1} is downloaded packages size and {2} is total size of packages."
+    },
+    {
+        "Key":  "Menu.Behaviour.MultiInstances.Title",
+        "English":  "Multi-instance launching"
+    },
+    {
+        "Key":  "Menu.Behaviour.MultiInstances.Description",
+        "English":  "Allows for having more than one Roblox game client instance open simultaneously. May cause issues with desktop app."
+    },
+    {
+        "Key":  "Menu.FlagProfiles.ClearFlags",
+        "English":  "Clear FFlags"
+    },
+    {
+        "Key":  "Common.Debug",
+        "English":  "Debug"
+    },
+    {
+        "Key":  "Menu.FastFlags.Presets.Categories.IngameMenu",
+        "English":  "Roblox Menu"
+    },
+    {
+        "Key":  "Menu.FastFlags.Presets.Categories.IngameMenu.Description",
+        "English":  "Debloat Roblox menu with FFlags"
+    },
+    {
+        "Key":  "Common.Deployment",
+        "English":  "Deployment"
+    },
+    {
+        "Key":  "Common.Studio",
+        "English":  "Studio"
+    },
+    {
+        "Key":  "Common.RobloxStudio",
+        "English":  "Roblox Studio"
+    },
+    {
+        "Key":  "Menu.Context.PlayerLogs.Description",
+        "English":  "Shows players leaving/joining server you\u0027re in."
+    },
+    {
+        "Key":  "Common.Type",
+        "English":  "Type"
+    },
+    {
+        "Key":  "Menu.Channel.VersionHash.Title",
+        "English":  "Version hash"
+    },
+    {
+        "Key":  "Menu.Channel.VersionHash.Desription",
+        "English":  "Force Goosetrap to download version from specific hash. Please do not change if you have no idea what this does."
+    },
+    {
+        "Key":  "Menu.SaveAndLaunch",
+        "English":  "Save and Launch"
+    },
+    {
+        "Key":  "Bootstrapper.Dialog.NoUpgradeWithoutClient",
+        "English":  "Upgrades were disabled with missing client.\n\tTo prevent issues upgrading will continue."
+    },
+    {
+        "Key":  "ContextMenu.PlayerLogs.Title",
+        "English":  "Player logs"
+    },
+    {
+        "Key":  "Common.Message",
+        "English":  "Message"
+    },
+    {
+        "Key":  "Dialog.Bloxshade.ThankYou",
+        "English":  "Sorry"
+    },
+    {
+        "Key":  "Dialog.Bloxshade.Setting",
+        "English":  "Goosetrap no longer supports Bloxshade.\nFor more information join Bloxshade discord server."
+    },
+    {
+        "Key":  "Common.Profiles",
+        "English":  "Profiles"
+    },
+    {
+        "Key":  "Menu.Deployment.Channel.OutOfDate",
+        "English":  "This channel is out of date, and is likely no longer being updated. Please use another channel."
+    },
+    {
+        "Key":  "Bootstrapper.Dialog.ChannelOutOfDate",
+        "English":  "The channel you\u0027re currently on ({0}) is out of date, and appears to no longer be receiving updates.\\n\nWould you like to switch to the default channel ({1})?"
+    },
+    {
+        "Key":  "Menu.Channel.ChangeAction.Title",
+        "English":  "Automatic channel change action"
+    },
+    {
+        "Key":  "Menu.Channel.ChangeAction.Description",
+        "English":  "Roblox or Goosetrap may try to change your preferred channel."
+    },
+    {
+        "Key":  "Menu.Channel.ChangeAction.Automatic",
+        "English":  "Change automatically"
+    },
+    {
+        "Key":  "Menu.Channel.ChangeAction.Prompt",
+        "English":  "Always prompt"
+    },
+    {
+        "Key":  "Menu.Channel.ChangeAction.Ignore",
+        "English":  "Never change"
+    },
+    {
+        "Key":  "Bootstrapper.Bootstrapper.Dialog.PromptChannelChange",
+        "English":  "Roblox is attempting to set your channel to {0}, however your current preferred channel is {1}.\n\n\nWould you like to switch your preferred channel to {0}?"
+    },
+    {
+        "Key":  "Menu.FastFlagEditor.ExportJson.IncludePresets",
+        "English":  "Would you like to include preset FFlags?"
+    },
+    {
+        "Key":  "Boostrapper.Dialog.UnauthorizedChannel",
+        "English":  "The channel you\u0027re currently on ({0}) has now been restricted from public use. You will now be on the default channel ({1})."
+    },
+    {
+        "Key":  "Menu.Channel.Switcher.Fetching",
+        "English":  "Fetching latest deploy info, please wait..."
+    },
+    {
+        "Key":  "Menu.Channel.Switcher.Unauthorized",
+        "English":  "The specified channel either doesn\u0027t exist or is private"
+    },
+    {
+        "Key":  "Installer.FailedToImportSettings",
+        "English":  "Failed to import Goosetrap settings.\n\n{0}"
+    },
+    {
+        "Key":  "Installer.ImportSettings",
+        "English":  "Import settings from Goosetrap"
+    },
+    {
+        "Key":  "Installer.InstallationNotFound",
+        "English":  "Goosetrap installation was not found."
+    },
+    {
+        "Key":  "Bootstrapper.Dialog.AnselDisabled",
+        "English":  "Ansel is not supported.\nYou can no longer use Bloxshade with Goosetrap."
+    },
+    {
+        "Key":  "Menu.Goosetrap.ExportData.Title",
+        "English":  "Export diagnostic data"
+    },
+    {
+        "Key":  "Menu.Goosetrap.ExportData.Description",
+        "English":  "Gather information that can be uploaded online to troubleshoot a problem you\u0027re having."
+    },
+    {
+        "Key":  "Menu.Goosetrap.ExportData.ExportConfig",
+        "English":  "Goosetrap configuration"
+    },
+    {
+        "Key":  "Menu.Goosetrap.ExportData.ExportLogs",
+        "English":  "All Goosetrap logs"
+    },
+    {
+        "Key":  "Menu.Bootstrapper.CleanUp.Title",
+        "English":  "Cleaner"
+    },
+    {
+        "Key":  "Menu.Bootstrapper.CleanUp.Description",
+        "English":  "Goosetrap will remove old data to save on space"
+    },
+    {
+        "Key":  "Enums.CleanerOptions.Never",
+        "English":  "Never"
+    },
+    {
+        "Key":  "Enums.CleanerOptions.OneDay",
+        "English":  "After 1 day"
+    },
+    {
+        "Key":  "Enums.CleanerOptions.OneWeek",
+        "English":  "After 1 week"
+    },
+    {
+        "Key":  "Enums.CleanerOptions.OneMonth",
+        "English":  "After 1 month"
+    },
+    {
+        "Key":  "Enums.CleanerOptions.TwoMonths",
+        "English":  "After 2 months"
+    },
+    {
+        "Key":  "Menu.Bootstrapper.Cleaner.Age.Title",
+        "English":  "When should the files get deleted"
+    },
+    {
+        "Key":  "Menu.Bootstrapper.Cleaner.Age.Description",
+        "English":  "Files older than set amount will be deleted."
+    },
+    {
+        "Key":  "Menu.Bootstrapper.Cleaner.Cache.Title",
+        "English":  "Cache"
+    },
+    {
+        "Key":  "Menu.Bootstrapper.Cleaner.Cache.Description",
+        "English":  "Old downloads will be deleted."
+    },
+    {
+        "Key":  "Menu.Bootstrapper.Cleaner.Logs.Title",
+        "English":  "Logs"
+    },
+    {
+        "Key":  "Menu.Bootstrapper.Cleaner.Logs.Description",
+        "English":  "Old log files will be deleted."
+    },
+    {
+        "Key":  "Menu.Bootstrapper.Cleaner.IncludeGoosetrap.Title",
+        "English":  "Goosetrap logs"
+    },
+    {
+        "Key":  "Menu.Bootstrapper.Cleaner.IncludeGoosetrap.Description",
+        "English":  "Goosetrap logs will be deleted."
+    },
+    {
+        "Key":  "Menu.FastFlagsDisabled.Header",
+        "English":  "FastFlags have been temporarily disabled"
+    },
+    {
+        "Key":  "Menu.FastFlagsDisabled.Description",
+        "English":  "For more information join Goosetrap Discord server"
+    },
+    {
+        "Key":  "Bootstrapper.Status.WaitingForData",
+        "English":  "Waiting for data"
+    },
+    {
+        "Key":  "Menu.FastFlags.EditorInfo",
+        "English":  "Roblox only applies whitelisted FFlags. Double click to learn more."
+    },
+    {
+        "Key":  "Common.Geometry",
+        "English":  "Geometry"
+    },
+    {
+        "Key":  "Menu.FastFlags.Geometry.Description",
+        "English":  "Control how Roblox renders 3D geometry."
+    },
+    {
+        "Key":  "Menu.FastFlags.MeshDetail.Header",
+        "English":  "Mesh detail"
+    },
+    {
+        "Key":  "Menu.FastFlags.MeshDetail.Description",
+        "English":  "Control how detailed meshes appear in-game."
+    },
+    {
+        "Key":  "Menu.FastFlags.MeshDetail.LowQualityWarning",
+        "English":  "Lower qualities may cause meshes to disappear."
+    },
+    {
+        "Key":  "Common.LowestQuality",
+        "English":  "Lowest quality"
+    },
+    {
+        "Key":  "Common.HighestQuality",
+        "English":  "Highest quality"
+    },
+    {
+        "Key":  "Common.UnknownStatus",
+        "English":  "Unknown status"
+    },
+    {
+        "Key":  "ContextMenu.ServerInformation.Notification.ServerNotTracked",
+        "English":  "Not tracked"
+    },
+    {
+        "Key":  "Menu.GPSEditor.FramerateCap.Title",
+        "English":  "Framerate Limit"
+    },
+    {
+        "Key":  "Menu.GPSEditor.FramerateCap.Description",
+        "English":  "Unlock framerate limit for Roblox. Going above 240 FPS is not recommended."
+    },
+    {
+        "Key":  "Common.GlobalSettings",
+        "English":  "Global Settings"
+    },
+    {
+        "Key":  "Menu.GBSEditor.Description",
+        "English":  "Set in-game settings from Goosetrap menu."
+    },
+    {
+        "Key":  "Menu.GBSEditor.UITransparency.Title",
+        "English":  "Transparency"
+    },
+    {
+        "Key":  "Menu.GBSEditor.UITransparency.Description",
+        "English":  "Custom transparency for UI elements."
+    },
+    {
+        "Key":  "Menu.GBSEditor.ReducedMotion.Title",
+        "English":  "Reduced Motion"
+    },
+    {
+        "Key":  "Menu.GBSEditor.ReducedMotion.Description",
+        "English":  "Removes the animation on the escape menu."
+    },
+    {
+        "Key":  "Menu.GBSEditor.FontSize.Title",
+        "English":  "Font Size"
+    },
+    {
+        "Key":  "Menu.GBSEditor.FontSize.Description",
+        "English":  "Choose how large the font should appear."
+    },
+    {
+        "Key":  "Menu.GBSEditor.GraphicsQuality.Title",
+        "English":  "Graphics Quality"
+    },
+    {
+        "Key":  "Common.Other",
+        "English":  "Other"
+    },
+    {
+        "Key":  "Menu.GBSEditor.MouseSensitivity.Title",
+        "English":  "Mouse Sensitivity"
+    },
+    {
+        "Key":  "Menu.GBSEditor.MouseSensitivity.Description",
+        "English":  "Change how fast the camera will move in-game."
+    },
+    {
+        "Key":  "Menu.GBSEditor.VREnabled.Title",
+        "English":  "VR Enabled"
+    },
+    {
+        "Key":  "Menu.GBSEditor.GraphicsQuality.Description",
+        "English":  "Set the graphics quality of your game"
+    },
+    {
+        "Key":  "Menu.GBSEditor.ReadOnly.Title",
+        "English":  "Set as Read-Only"
+    },
+    {
+        "Key":  "Menu.GBSEditor.ReadOnly.Description",
+        "English":  "Prevent Roblox from overriding global settings."
+    },
+    {
+        "Key":  "Menu.FastFlags.FRMQualityOverride.Title",
+        "English":  "FRM Quality Override"
+    },
+    {
+        "Key":  "Menu.FastFlags.FRMQualityOverride.Description",
+        "English":  "Choose the FRM quality that Roblox should use."
+    }
+]
