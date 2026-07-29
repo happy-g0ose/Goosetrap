@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -184,6 +184,8 @@ namespace Goosetrap
         {
             const string LOG_IDENT = "LaunchHandler::LaunchSettings";
 
+            Task.Run(App.RemoteData.LoadData);
+
             using var interlock = new InterProcessLock("Settings");
 
             if (interlock.IsAcquired)
@@ -219,6 +221,8 @@ namespace Goosetrap
         public static void LaunchRoblox(LaunchMode launchMode)
         {
             const string LOG_IDENT = "LaunchHandler::LaunchRoblox";
+
+            Task.Run(App.RemoteData.LoadData);
 
             if (launchMode == LaunchMode.None)
                 throw new InvalidOperationException("No Roblox launch mode set");

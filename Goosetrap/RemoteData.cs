@@ -47,10 +47,20 @@ namespace Goosetrap
             return;
         }
 
+        private bool _loadStarted = false;
+
         // remember that our data isnt necessary, we can fetch it in the background 
         public async Task LoadData()
         {
             const string LOG_IDENT = $"{nameof(RemoteDataManager)}::LoadData";
+            
+            lock (this)
+            {
+                if (_loadStarted)
+                    return;
+                _loadStarted = true;
+            }
+
             if (App.Settings.Prop.ForceLocalData)
             {
                 App.Logger.WriteLine(LOG_IDENT, "Force loading local data");
