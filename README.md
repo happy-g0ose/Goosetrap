@@ -2,60 +2,61 @@
     <img src="Images/Goosetrap.png" width="220" alt="Goosetrap Logo">
 </p>
 
-<h1 align="center">Goosetrap (Гусетрап)</h1>
+<h1 align="center">Goosetrap</h1>
 
 <p align="center">
-    <strong>Быстрый, оптимизированный и кастомизированный лаунчер для Roblox.</strong>
+    <strong>A fast, optimized, and customizable launcher for Roblox.</strong>
 </p>
 
 ---
 
-**Goosetrap** — это форк Bloxstrap / Fishstrap, разработанный специально для максимального повышения FPS, экстремальной оптимизации графики и удобного управления параметрами движка Roblox.
+**Goosetrap** is a fork of Bloxstrap / Fishstrap designed specifically to maximize FPS, achieve extreme graphics optimization, and easily manage Roblox engine settings.
 
 ---
 
-## 🚀 Основные особенности / Features
+## 🚀 Key Features
 
-- **Экстремальный FPS Unlocker** (Разблокировка и лимит кадров).
-- **Режим "Potato PC"** (Полное отключение и сжатие текстур 1x1, отключение теней, травы и пост-эффектов).
-- **Удобная навигация** (Все настройки оптимизации вынесены на один экран).
-- **Полная русская локализация** интерфейса и настроек.
-- **Чистый дизайн** с высококачественными логотипами без лишних кнопок и посторонних авторов.
-
----
-
-## 📖 Гайд по оптимизации FPS в Roblox / FPS Boost Guide
-
-Чтобы получить **максимальный FPS** и убрать любые лаги в Roblox, следуйте этой инструкции:
-
-### 1. Разблокировка FPS (FPS Cap)
-1. Откройте **Настройки Goosetrap**.
-2. Перейдите во вкладку **«Настройки движка»** (Engine Settings).
-3. Прокрутите страницу до раздела **«Goosetrap Оптимизация»**.
-4. В поле **«Разблокировка и лимит кадров (FPS Cap)»** введите `0` или `9999`. Это полностью уберет стандартный лимит кадров Roblox.
-
-### 2. Режим "Potato PC" (Удаление текстур и графики)
-Если у вас слабый компьютер или вам нужен максимальный FPS в тяжелых плейсах (например, в дальнобойщиках, шутерах и т.д.):
-1. В разделе **«Goosetrap Оптимизация»** включите тумблер **«Удалить текстуры и графику (Potato PC)»**.
-2. **Что это делает:**
-   - Сжимает все игровые текстуры до размера 1x1 пиксель (текстуры заменяются на сплошной цветной пластик, что колоссально снижает нагрузку на видеокарту).
-   - Полностью выключает прорисовку травы.
-   - Полностью отключает тени.
-   - Отключает сглаживание (Anti-Aliasing) и пост-обработку (размытие, блум, цветокоррекцию).
-
-### 3. Дополнительные настройки для буста
-В той же вкладке **«Настройки движка»** рекомендуется выставить следующие параметры:
-- **Качество сглаживания (MSAA):** Выберите `Выключено` (или оставьте по умолчанию, Potato PC автоматически отключит его).
-- **Режим рендеринга:** Выберите `Direct3D 11` (самый стабильный API для Windows) или `Vulkan` (если у вас видеокарта AMD).
-- **Качество текстур:** Если тумблер Potato PC отключен, но вы хотите оптимизировать игру, выберите `Уровень 1 (Наинизший)`.
+- **Extreme FPS Unlocker** (Frame rate unlocking and custom cap limits).
+- **"Potato PC" Mode** (Complete disablement and 1x1 downscaling of textures, disabled shadows, grass, and post-processing effects).
+- **Multi-Account Manager** (Quickly save multiple accounts and launch them directly without using a browser, enabling multi-instance/multi-roblox).
+- **Active Clients Monitor** (View running Roblox clients, monitor RAM usage in real-time, and easily restart or close accounts).
+- **Clean UI & Modern Design** (Sleek dark theme with simple navigation, fully translated into English and Russian).
 
 ---
 
-## 📦 Как скачать и запустить / Installation
+## 📖 FPS Boost & Optimization Guide
 
-1. Перейдите в раздел [Releases (Релизы)](https://github.com/happy-g0ose/Goosetrap/releases) нашего репозитория.
-2. Скачайте последнюю версию файла **`Goosetrap.exe`**.
-3. Запустите его для установки или открытия меню настроек (для открытия настроек уже установленного приложения можно запустить его с параметром `-menu`).
+To get the **maximum FPS** and remove stuttering in Roblox, follow these steps:
+
+### 1. Unlocking FPS (FPS Cap)
+1. Open **Goosetrap Settings**.
+2. Navigate to the **"Engine Settings"** tab.
+3. Scroll down to the **"Goosetrap Optimization"** section.
+4. Set the **"FPS Cap"** value to `0` or `9999` to remove the default Roblox 60 FPS lock.
+
+### 2. "Potato PC" Mode (Removing Textures and Graphics)
+If you have a low-end computer or need maximum performance in demanding games (like simulators, shooters, etc.):
+1. In the **"Goosetrap Optimization"** section, enable the **"Remove Textures and Graphics (Potato PC)"** toggle.
+2. **What this does:**
+   - Compresses all game textures down to 1x1 pixels (rendering them as solid plastic blocks, which massively reduces video memory and GPU load).
+   - Completely disables grass rendering.
+   - Completely disables shadows.
+   - Turns off Anti-Aliasing (MSAA) and post-processing effects (blur, bloom, color correction).
+
+### 3. Additional Settings for Performance
+In the same **"Engine Settings"** tab, we recommend setting:
+- **Anti-Aliasing (MSAA):** Set to `Disabled` (Potato PC mode turns this off automatically).
+- **Rendering Mode:** Choose `Direct3D 11` (most stable API for Windows) or `Vulkan` (recommended for AMD graphics cards).
+- **Texture Quality:** If Potato PC mode is disabled, select `Level 1 (Lowest)` for optimized texture resolution.
+
+---
+
+## 📦 Download & Installation
+
+1. Go to the [Releases](https://github.com/happy-g0ose/Goosetrap/releases) section of our repository.
+2. Download the latest **`Goosetrap.exe`** executable.
+3. Run the installer to configure your preferences and set up your Goosetrap app directory.
+4. To open the settings menu later, launch Goosetrap with the `-menu` argument or open it from the Start Menu.
 
 ---
 
