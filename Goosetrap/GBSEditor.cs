@@ -138,7 +138,7 @@ namespace Goosetrap
   <Item class=""UserGameSettings"" referent=""RBX1"">
     <Properties>
       <int name=""FramerateCap"">0</int>
-      <token name=""SavedQualityLevel"">0</token>
+      <token name=""SavedQualityLevel"">1</token>
       <float name=""MouseSensitivity"">1</float>
       <bool name=""VREnabled"">false</bool>
       <float name=""PreferredTransparency"">1</float>
