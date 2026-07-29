@@ -1522,10 +1522,10 @@ Goosetrap был установлен по адресу "{1}".</value>
     <value>Неизвестно</value>
   </data>
   <data name="Menu.ActiveClients.AccountLabel" xml:space="preserve">
-    <value>Аккаунт</value>
+    <value>Аккаунт: </value>
   </data>
   <data name="Menu.ActiveClients.GameLabel" xml:space="preserve">
-    <value>Игра</value>
+    <value>Игра: </value>
   </data>
   <data name="Menu.ActiveClients.ProcessLabel" xml:space="preserve">
     <value>Плейс #{0}</value>
