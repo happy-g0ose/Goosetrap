@@ -389,7 +389,7 @@ namespace Goosetrap.Integrations
             {
                 ServerType.Private => "In a private server",
                 ServerType.Reserved => "In a reserved server",
-                _ => $"by {universeDetails.Data.Creator.Name}" + (universeDetails.Data.Creator.HasVerifiedBadge ? " в‘пёЏ" : ""),
+                _ => $"by {universeDetails.Data.Creator.Name}" + (universeDetails.Data.Creator.HasVerifiedBadge ? " \u2611\uFE0F" : ""),
             };
 
             string universeName = universeDetails.Data.Name;
