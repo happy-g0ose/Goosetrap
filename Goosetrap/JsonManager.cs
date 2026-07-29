@@ -32,6 +32,15 @@ namespace Goosetrap
 
             App.Logger.WriteLine(LOG_IDENT, $"Loading from {FileLocation}...");
 
+            if (!File.Exists(FileLocation))
+            {
+                App.Logger.WriteLine(LOG_IDENT, "File does not exist. Initializing default properties.");
+                Prop = new T();
+                Loaded = true;
+                Save();
+                return;
+            }
+
             try
             {
                 string contents = File.ReadAllText(FileLocation);
