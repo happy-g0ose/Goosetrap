@@ -137,7 +137,7 @@ namespace Goosetrap
   <External>nil</External>
   <Item class=""UserGameSettings"" referent=""RBX1"">
     <Properties>
-      <int name=""FramerateCap"">0</int>
+      <int name=""FramerateCap"">60</int>
       <token name=""SavedQualityLevel"">1</token>
       <float name=""MouseSensitivity"">1</float>
       <bool name=""VREnabled"">false</bool>
