@@ -164,12 +164,12 @@ namespace Goosetrap.UI.ViewModels.Settings
 
         public bool PotatoGraphicsEnabled
         {
-            get => App.FastFlags.GetValue("FIntDebugTextureManagerSkipMips") == "8";
+            get => App.FastFlags.GetValue("FIntDebugTextureManagerSkipMips") == "4";
             set
             {
                 if (value)
                 {
-                    App.FastFlags.SetValue("FIntDebugTextureManagerSkipMips", "8");
+                    App.FastFlags.SetValue("FIntDebugTextureManagerSkipMips", "4");
                     App.FastFlags.SetValue("DFFlagTextureQualityOverrideEnabled", "True");
                     App.FastFlags.SetValue("DFIntTextureQualityOverride", "0");
                     App.FastFlags.SetValue("FIntFRMMinGrassDistance", "0");
