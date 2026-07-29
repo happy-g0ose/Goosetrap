@@ -28,6 +28,7 @@ namespace Goosetrap.UI.ViewModels.Settings
         public string CommandLine { get; set; } = "";
         public string Arguments { get; set; } = "";
         public long PlaceId { get; set; }
+        public long UniverseId { get; set; }
 
         public string Username
         {
@@ -129,6 +130,7 @@ namespace Goosetrap.UI.ViewModels.Settings
                             if (logData.placeId != 0)
                             {
                                 existingClient.PlaceId = logData.placeId;
+                                existingClient.UniverseId = logData.universeId;
                                 _ = FetchGameNameAsync(existingClient);
                             }
                         }
@@ -171,6 +173,7 @@ namespace Goosetrap.UI.ViewModels.Settings
                     string username = "Неизвестно";
                     string displayName = "Неизвестно";
                     long placeId = 0;
+                    long universeId = 0;
                     bool foundByTicket = false;
                     
                     // Ищем тикет в аргументах: --gameinfo=TICKET
@@ -192,13 +195,14 @@ namespace Goosetrap.UI.ViewModels.Settings
                     // Фолбэк: парсим лог-файл (для запусков через сайт)
                     if (!foundByTicket)
                     {
-                        (username, displayName, placeId) = ParseLogFile(process);
+                        (username, displayName, placeId, universeId) = ParseLogFile(process);
                     }
                     else
                     {
                         // PlaceId берём из лога даже если аккаунт определён по тикету
                         var logData = ParseLogFile(process);
                         placeId = logData.placeId;
+                        universeId = logData.universeId;
                     }
 
                     var clientInfo = new RobloxClientInfo
@@ -208,6 +212,7 @@ namespace Goosetrap.UI.ViewModels.Settings
                         CommandLine = cmdLine,
                         Arguments = arguments,
                         PlaceId = placeId,
+                        UniverseId = universeId,
                         Username = username,
                         DisplayName = displayName
                     };
@@ -307,14 +312,22 @@ namespace Goosetrap.UI.ViewModels.Settings
                 // First try to get Universe ID, then Universe Name (e.g. "Pet Simulator 99" instead of "Fantasy World")
                 try
                 {
-                    string url1 = $"https://games.roblox.com/v1/games/multiget-place-details?placeIds={client.PlaceId}";
-                    string json1 = await App.HttpClient.GetStringAsync(url1);
-                    using var doc1 = JsonDocument.Parse(json1);
-                    var root1 = doc1.RootElement;
-                    if (root1.ValueKind == JsonValueKind.Array && root1.GetArrayLength() > 0)
+                    long universeId = client.UniverseId;
+                    
+                    if (universeId == 0)
                     {
-                        long universeId = root1[0].GetProperty("universeId").GetInt64();
-                        
+                        string url1 = $"https://games.roblox.com/v1/games/multiget-place-details?placeIds={client.PlaceId}";
+                        string json1 = await App.HttpClient.GetStringAsync(url1);
+                        using var doc1 = JsonDocument.Parse(json1);
+                        var root1 = doc1.RootElement;
+                        if (root1.ValueKind == JsonValueKind.Array && root1.GetArrayLength() > 0)
+                        {
+                            universeId = root1[0].GetProperty("universeId").GetInt64();
+                        }
+                    }
+                    
+                    if (universeId != 0)
+                    {
                         string url2 = $"https://games.roblox.com/v1/games?universeIds={universeId}";
                         string json2 = await App.HttpClient.GetStringAsync(url2);
                         using var doc2 = JsonDocument.Parse(json2);
@@ -401,11 +414,12 @@ namespace Goosetrap.UI.ViewModels.Settings
             return null;
         }
 
-        private static (string username, string displayName, long placeId) ParseLogFile(Process process)
+        private static (string username, string displayName, long placeId, long universeId) ParseLogFile(Process process)
         {
             string username = Strings.Menu_ActiveClients_Unknown;
             string displayName = Strings.Menu_ActiveClients_Unknown;
             long placeId = 0;
+            long universeId = 0;
 
             try
             {
@@ -415,6 +429,7 @@ namespace Goosetrap.UI.ViewModels.Settings
                     var rbxuidRegex = new Regex(@"rbxuid=(?<userId>\d+)");
                     var ticketRegex = new Regex(@"ticket=\{""UserId""%3a(?<userId>\d+)%2c""UserName""%3a""(?<username>[^""]+)""%2c""DisplayName""%3a""(?<displayName>[^""]+)""");
                     var placeIdRegex = new Regex(@"placeid:(?<placeId>\d+)");
+                    var universeIdRegex = new Regex(@"universeid:(?<universeId>\d+)", RegexOptions.IgnoreCase);
 
                     using var fs = new FileStream(logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                     using var sr = new StreamReader(fs);
@@ -425,6 +440,9 @@ namespace Goosetrap.UI.ViewModels.Settings
                     {
                         var placeMatch = placeIdRegex.Match(line);
                         if (placeMatch.Success) placeId = long.Parse(placeMatch.Groups["placeId"].Value);
+
+                        var universeMatch = universeIdRegex.Match(line);
+                        if (universeMatch.Success) universeId = long.Parse(universeMatch.Groups["universeId"].Value);
 
                         var rbxuidMatch = rbxuidRegex.Match(line);
                         if (rbxuidMatch.Success)
@@ -462,7 +480,7 @@ namespace Goosetrap.UI.ViewModels.Settings
                 App.Logger.WriteLine("ActiveClientsViewModel", $"Failed to parse log file for PID {process.Id}: {ex.Message}");
             }
 
-            return (username, displayName, placeId);
+            return (username, displayName, placeId, universeId);
         }
     }
 }
