@@ -135,7 +135,7 @@ namespace Goosetrap
 
                 flag.Active = true;
 
-                if (i < Args.Length - 1 && Args[i+1] is string nextArg && !nextArg.StartsWith('-'))
+                if (i < Args.Length - 1 && Args[i+1] is string nextArg && (identifier == "player" || identifier == "studio" || !nextArg.StartsWith('-')))
                 {
                     flag.Data = nextArg;
                     i++;
