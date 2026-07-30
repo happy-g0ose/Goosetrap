@@ -749,25 +749,69 @@ namespace Goosetrap
                     }
                 }
 
-                // v2.2.0 - byfron will trip if we keep a process handle open for over a minute, so we're doing this now
-                try
+                if (App.LaunchSettings.AccountUserId != 0)
                 {
-                    using var process = Process.Start(startInfo)!;
-                    _appPid = process.Id;
-                }
-                catch (Win32Exception ex) when (ex.NativeErrorCode == 1223)
-                {
-                    // 1223 = ERROR_CANCELLED, gets thrown if a UAC prompt is cancelled
-                    return;
-                }
-                catch (Exception)
-                {
-                    // attempt a reinstall on next launch
-                    File.Delete(AppData.ExecutablePath);
-                    throw;
+                    App.Logger.WriteLine(LOG_IDENT, $"Waiting for Roblox launch semaphore for account {App.LaunchSettings.AccountUserId}...");
                 }
 
-                App.Logger.WriteLine(LOG_IDENT, $"Started Roblox (PID {_appPid}), waiting for log file");
+                using var launchSemaphore = new System.Threading.Semaphore(1, 1, "Goosetrap-RobloxLaunchSemaphore");
+                bool acquiredSemaphore = false;
+                try
+                {
+                    acquiredSemaphore = launchSemaphore.WaitOne(TimeSpan.FromSeconds(30));
+                    if (!acquiredSemaphore)
+                    {
+                        App.Logger.WriteLine(LOG_IDENT, "Failed to acquire Roblox launch semaphore within timeout!");
+                    }
+
+                    if (App.LaunchSettings.AccountUserId != 0)
+                    {
+                        var account = App.Accounts.Prop.Accounts.FirstOrDefault(x => x.UserId == App.LaunchSettings.AccountUserId);
+                        if (account != null)
+                        {
+                            string cookie = Goosetrap.Utility.AccountsHelper.Decrypt(account.EncryptedCookie);
+                            if (!string.IsNullOrEmpty(cookie))
+                            {
+                                Goosetrap.Utility.AccountsHelper.SetRobloxCookie(cookie);
+                                App.Logger.WriteLine(LOG_IDENT, $"Set Roblox cookie for UserId={App.LaunchSettings.AccountUserId} right before launch");
+                            }
+                        }
+                    }
+
+                    // v2.2.0 - byfron will trip if we keep a process handle open for over a minute, so we're doing this now
+                    try
+                    {
+                        using var process = Process.Start(startInfo)!;
+                        _appPid = process.Id;
+                    }
+                    catch (Win32Exception ex) when (ex.NativeErrorCode == 1223)
+                    {
+                        // 1223 = ERROR_CANCELLED, gets thrown if a UAC prompt is cancelled
+                        return;
+                    }
+                    catch (Exception)
+                    {
+                        // attempt a reinstall on next launch
+                        File.Delete(AppData.ExecutablePath);
+                        throw;
+                    }
+
+                    App.Logger.WriteLine(LOG_IDENT, $"Started Roblox (PID {_appPid}), waiting for log file");
+
+                    if (App.LaunchSettings.AccountUserId != 0)
+                    {
+                        App.Logger.WriteLine(LOG_IDENT, "Waiting 3 seconds for Roblox to read the cookie...");
+                        Thread.Sleep(3000);
+                    }
+                }
+                finally
+                {
+                    if (acquiredSemaphore)
+                    {
+                        launchSemaphore.Release();
+                        App.Logger.WriteLine(LOG_IDENT, "Released Roblox launch semaphore");
+                    }
+                }
 
                 logCreatedEvent.WaitOne(TimeSpan.FromSeconds(15));
 

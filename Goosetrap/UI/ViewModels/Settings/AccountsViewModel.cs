@@ -24,8 +24,6 @@ namespace Goosetrap.UI.ViewModels.Settings
 
     public class AccountUIModel : NotifyPropertyChangedViewModel
     {
-        private static readonly System.Threading.SemaphoreSlim LaunchSemaphore = new(1, 1);
-
         public string Username { get; set; } = "";
         public string DisplayName { get; set; } = "";
         public long UserId { get; set; }
@@ -72,7 +70,6 @@ namespace Goosetrap.UI.ViewModels.Settings
         private async Task LaunchAsync()
         {
             const string LOG_IDENT = "AccountUIModel::Launch";
-            await LaunchSemaphore.WaitAsync();
             try
             {
                 var entry = App.Accounts.Prop.Accounts.FirstOrDefault(x => x.UserId == UserId);
@@ -93,17 +90,14 @@ namespace Goosetrap.UI.ViewModels.Settings
                     return;
                 }
 
-                // Записываем куки в локальное хранилище Roblox, чтобы Desktop App был авторизован
-                AccountsHelper.SetRobloxCookie(cookie);
-
-                // Запускаем Roblox через наш бутстраппер Goosetrap.exe
+                // Запускаем Roblox через наш бутстраппер Goosetrap.exe с указанием ID аккаунта для отложенной авторизации
                 string launchArgs = $"--app --gameinfo={ticket} --launchtime={DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}";
                 App.Logger.WriteLine(LOG_IDENT, $"Launching Roblox via Goosetrap bootstrapper for {Username}...");
 
                 var proc = Process.Start(new ProcessStartInfo
                 {
                     FileName = Paths.Process,
-                    Arguments = $"-player \"{launchArgs}\"",
+                    Arguments = $"-player \"{launchArgs}\" -account {UserId}",
                     WorkingDirectory = Path.GetDirectoryName(Paths.Process),
                     UseShellExecute = false
                 });
@@ -112,18 +106,11 @@ namespace Goosetrap.UI.ViewModels.Settings
                 // Тикет остаётся в командной строке даже если Roblox перезапустит процесс с новым PID
                 AccountPidRegistry.TicketMap[ticket] = (Username, DisplayName, UserId);
                 App.Logger.WriteLine(LOG_IDENT, $"Registered ticket for account {Username}");
-
-                // Ожидаем 3 секунды, чтобы Roblox успел привязать сессию WinInet и не перехватил куки следующего аккаунта
-                await Task.Delay(3000);
             }
             catch (Exception ex)
             {
                 App.Logger.WriteException(LOG_IDENT, ex);
                 Frontend.ShowMessageBox(string.Format(Strings.Menu_Accounts_LaunchError, ex.Message), MessageBoxImage.Error);
-            }
-            finally
-            {
-                LaunchSemaphore.Release();
             }
         }
 
