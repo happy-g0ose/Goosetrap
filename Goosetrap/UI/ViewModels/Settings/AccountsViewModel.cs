@@ -132,6 +132,17 @@ namespace Goosetrap.UI.ViewModels.Settings
                 }
 
                 // Запускаем RobloxPlayerBeta.exe напрямую — это позволяет мульти-инстанс
+                if (App.Settings.Prop.MultiInstanceLaunching)
+                {
+                    if (!Utilities.DoesMutexExist("ROBLOX_singletonMutex"))
+                    {
+                        App.Logger.WriteLine(LOG_IDENT, "Starting multi-instance watcher...");
+                        using System.Threading.EventWaitHandle initEventHandle = new System.Threading.EventWaitHandle(false, System.Threading.EventResetMode.AutoReset, "Goosetrap-MultiInstanceWatcherInitialisationFinished");
+                        Process.Start(Paths.Process, "-multiinstancewatcher");
+                        initEventHandle.WaitOne(TimeSpan.FromSeconds(2));
+                    }
+                }
+
                 string launchArgs = $"--app --gameinfo={ticket} --launchtime={DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}";
                 App.Logger.WriteLine(LOG_IDENT, $"Launching Roblox directly for {Username} (UserId={UserId})...");
 
