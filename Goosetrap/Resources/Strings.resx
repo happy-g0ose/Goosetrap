@@ -1855,10 +1855,10 @@ Defaulting to {1}.</value>
     <value>Unknown</value>
   </data>
   <data name="Menu.ActiveClients.AccountLabel" xml:space="preserve">
-    <value>Account</value>
+    <value>Account: </value>
   </data>
   <data name="Menu.ActiveClients.GameLabel" xml:space="preserve">
-    <value>Game</value>
+    <value>Game: </value>
   </data>
   <data name="Menu.ActiveClients.ProcessLabel" xml:space="preserve">
     <value>Place #{0}</value>
@@ -1878,5 +1878,29 @@ Defaulting to {1}.</value>
   </data>
   <data name="Menu.About.DiscordProfile" xml:space="preserve">
     <value>Discord Profile</value>
+  </data>
+  <data name="Menu_FastFlags_GoosetrapOptimization" xml:space="preserve">
+    <value>Goosetrap Optimization</value>
+  </data>
+  <data name="Menu_FastFlags_FPSCap_Title" xml:space="preserve">
+    <value>FPS Unlock and Cap</value>
+  </data>
+  <data name="Menu_FastFlags_FPSCap_Description" xml:space="preserve">
+    <value>Set a custom framerate limit for Roblox. Enter 0 or 9999 to fully unlock FPS.</value>
+  </data>
+  <data name="Menu_FastFlags_PotatoPC_Title" xml:space="preserve">
+    <value>Remove Textures and Graphics (Potato PC)</value>
+  </data>
+  <data name="Menu_FastFlags_PotatoPC_Description" xml:space="preserve">
+    <value>Compresses all textures to 1x1 pixels and disables all shadows, grass, and effects for maximum FPS boost.</value>
+  </data>
+  <data name="Menu.ActiveClients.ProcessIDLabel" xml:space="preserve">
+    <value>Process ID (PID): </value>
+  </data>
+  <data name="Menu.ActiveClients.MemoryLabel" xml:space="preserve">
+    <value>RAM: </value>
+  </data>
+  <data name="Menu.ActiveClients.UptimeLabel" xml:space="preserve">
+    <value>Uptime: </value>
   </data>
 </root>

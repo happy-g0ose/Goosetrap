@@ -149,15 +149,15 @@
             </ComboBox>
         </controls:OptionControl>
 
-        <TextBlock Text="Goosetrap Оптимизация" FontSize="16" FontWeight="Medium" Margin="0,16,0,0" />
+        <TextBlock Text="{x:Static resources:Strings.Menu_FastFlags_GoosetrapOptimization}" FontSize="16" FontWeight="Medium" Margin="0,16,0,0" />
         <controls:OptionControl 
-            Header="Разблокировка и лимит кадров (FPS Cap)" 
-            Description="Установите лимит кадров для Roblox. Введите 0 или 9999 для полной разблокировки FPS.">
+            Header="{x:Static resources:Strings.Menu_FastFlags_FPSCap_Title}" 
+            Description="{x:Static resources:Strings.Menu_FastFlags_FPSCap_Description}">
             <ui:TextBox Margin="5,0,0,0" Padding="10,5,10,5" Width="200" Text="{Binding FramerateCap, Mode=TwoWay}" PreviewTextInput="ValidateUInt32" />
         </controls:OptionControl>
         <controls:OptionControl 
-            Header="Удалить текстуры и графику (Potato PC)" 
-            Description="Полностью сжимает текстуры до 1x1 пикселя и отключает все тени, траву и эффекты для максимального буста FPS">
+            Header="{x:Static resources:Strings.Menu_FastFlags_PotatoPC_Title}" 
+            Description="{x:Static resources:Strings.Menu_FastFlags_PotatoPC_Description}">
             <ui:ToggleSwitch IsChecked="{Binding PotatoGraphicsEnabled, Mode=TwoWay}" />
         </controls:OptionControl>
         </StackPanel>

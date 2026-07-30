@@ -92,8 +92,14 @@
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="ID Процесса (PID): " Foreground="{DynamicResource TextFillColorTertiaryBrush}" FontSize="11" />
-                                <TextBlock Text="{Binding Pid}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" FontSize="11" />
+                                <TextBlock Text="{x:Static resources:Strings.Menu_ActiveClients_ProcessIDLabel}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" FontSize="11" />
+                                <TextBlock Text="{Binding Pid}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" FontSize="11" Margin="0,0,12,0" />
+
+                                <TextBlock Text="{x:Static resources:Strings.Menu_ActiveClients_MemoryLabel}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" FontSize="11" />
+                                <TextBlock Text="{Binding RamUsage}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" FontSize="11" Margin="0,0,12,0" />
+
+                                <TextBlock Text="{x:Static resources:Strings.Menu_ActiveClients_UptimeLabel}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" FontSize="11" />
+                                <TextBlock Text="{Binding Uptime}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" FontSize="11" />
                             </StackPanel>
                         </StackPanel>
 

@@ -1545,4 +1545,28 @@ Goosetrap был установлен по адресу "{1}".</value>
   <data name="Menu.About.DiscordProfile" xml:space="preserve">
     <value>Discord профиль</value>
   </data>
+  <data name="Menu_FastFlags_GoosetrapOptimization" xml:space="preserve">
+    <value>Goosetrap Оптимизация</value>
+  </data>
+  <data name="Menu_FastFlags_FPSCap_Title" xml:space="preserve">
+    <value>Разблокировка и лимит кадров (FPS Cap)</value>
+  </data>
+  <data name="Menu_FastFlags_FPSCap_Description" xml:space="preserve">
+    <value>Установите лимит кадров для Roblox. Введите 0 или 9999 для полной разблокировки FPS.</value>
+  </data>
+  <data name="Menu_FastFlags_PotatoPC_Title" xml:space="preserve">
+    <value>Удалить текстуры и графику (Potato PC)</value>
+  </data>
+  <data name="Menu_FastFlags_PotatoPC_Description" xml:space="preserve">
+    <value>Полностью сжимает текстуры до 1x1 пикселя и отключает все тени, траву и эффекты для максимального буста FPS.</value>
+  </data>
+  <data name="Menu.ActiveClients.ProcessIDLabel" xml:space="preserve">
+    <value>ID Процесса (PID): </value>
+  </data>
+  <data name="Menu.ActiveClients.MemoryLabel" xml:space="preserve">
+    <value>ОЗУ: </value>
+  </data>
+  <data name="Menu.ActiveClients.UptimeLabel" xml:space="preserve">
+    <value>Время работы: </value>
+  </data>
 </root>

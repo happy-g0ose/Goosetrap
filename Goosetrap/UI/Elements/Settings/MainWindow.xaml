@@ -61,8 +61,8 @@
                     <ui:NavigationItem x:Name="fastflags" Content="{x:Static resources:Strings.Menu_FastFlags_Title}" PageType="{x:Type pages:FastFlagsPage}" Icon="Flag24" Tag="fastflags" />
                     <ui:NavigationItem x:Name="gbs" Content="{x:Static resources:Strings.Common_GlobalSettings}" PageType="{x:Type pages:GBSEditorPage}" Icon="Settings20" Tag="gbseditor"/>
                     <ui:NavigationItem Content="{x:Static resources:Strings.Menu_Appearance_Title}" PageType="{x:Type pages:AppearancePage}" Icon="PaintBrush24" Tag="appearance" />
-                    <ui:NavigationItem Content="Аккаунты" PageType="{x:Type pages:AccountsPage}" Icon="People28" Tag="accounts" />
-                    <ui:NavigationItem Content="Активные клиенты" PageType="{x:Type pages:ActiveClientsPage}" Icon="Person24" Tag="activeclients" />
+                    <ui:NavigationItem Content="{x:Static resources:Strings.Menu_Accounts_Title}" PageType="{x:Type pages:AccountsPage}" Icon="People28" Tag="accounts" />
+                    <ui:NavigationItem Content="{x:Static resources:Strings.Menu_ActiveClients_Title}" PageType="{x:Type pages:ActiveClientsPage}" Icon="Person24" Tag="activeclients" />
                     <ui:NavigationItem Content="{x:Static resources:Strings.Common_Shortcuts}" PageType="{x:Type pages:ShortcutsPage}" Icon="Apps28" Tag="shortcuts" />
 
                     <ui:NavigationItem Content="{x:Static resources:Strings.Menu_FastFlagEditor_Title}" PageType="{x:Type pages:FastFlagEditorPage}" Tag="fastflageditor" Visibility="Collapsed" />
