@@ -44,6 +44,10 @@ namespace Goosetrap
 
         public LaunchFlag BloxshadeFlag { get; } = new("bloxshade");
 
+        public LaunchFlag AccountFlag               { get; } = new("account");
+
+        public long AccountUserId { get; set; } = 0;
+
 #if DEBUG
         public bool BypassUpdateCheck => true;
 #else
@@ -146,6 +150,9 @@ namespace Goosetrap
                     App.Logger.WriteLine(LOG_IDENT, $"Identifier '{identifier}' is active");
                 }
             }
+
+            if (AccountFlag.Active && long.TryParse(AccountFlag.Data, out long userId))
+                AccountUserId = userId;
 
             if (VersionFlag.Active)
                 RobloxLaunchMode = LaunchMode.Unknown; // determine in bootstrapper

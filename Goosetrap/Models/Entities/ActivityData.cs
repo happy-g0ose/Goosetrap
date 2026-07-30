@@ -161,12 +161,12 @@ namespace Goosetrap.Models.Entities
                 GlobalCache.ServerTime[JobId] = firstSeen;
                 serverTimeSemaphore.Release();
 
-                Frontend.ShowConnectivityDialog(
-                    string.Format(Strings.Dialog_Connectivity_UnableToConnect, "rovalra.com"),
-                    Strings.ActivityWatcher_LocationQueryFailed,
-                    MessageBoxImage.Warning,
-                    ex
-                );
+                // Frontend.ShowConnectivityDialog(
+                //     string.Format(Strings.Dialog_Connectivity_UnableToConnect, "rovalra.com"),
+                //     Strings.ActivityWatcher_LocationQueryFailed,
+                //     MessageBoxImage.Warning,
+                //     ex
+                // );
             }
 
             return firstSeen;
@@ -210,12 +210,12 @@ namespace Goosetrap.Models.Entities
                 GlobalCache.ServerLocation[MachineAddress] = location;
                 serverQuerySemaphore.Release();
 
-                Frontend.ShowConnectivityDialog(
-                    string.Format(Strings.Dialog_Connectivity_UnableToConnect, "ipinfo.io"),
-                    Strings.ActivityWatcher_LocationQueryFailed,
-                    MessageBoxImage.Warning,
-                    ex
-                );
+                // Frontend.ShowConnectivityDialog(
+                //     string.Format(Strings.Dialog_Connectivity_UnableToConnect, "ipinfo.io"),
+                //     Strings.ActivityWatcher_LocationQueryFailed,
+                //     MessageBoxImage.Warning,
+                //     ex
+                // );
             }
 
             return location;

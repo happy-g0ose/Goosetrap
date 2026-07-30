@@ -275,8 +275,13 @@ namespace Goosetrap.UI.ViewModels.Settings
             return null;
         }
 
+        private static readonly Dictionary<int, long> ProcessUserIdCache = new();
+
         private static long GetUserIdFromLog(Process process)
         {
+            if (ProcessUserIdCache.TryGetValue(process.Id, out long cachedId))
+                return cachedId;
+
             try
             {
                 string logPath = FindLogFileForProcess(process);
@@ -298,6 +303,11 @@ namespace Goosetrap.UI.ViewModels.Settings
                         var ticketMatch = ticketRegex.Match(line);
                         if (ticketMatch.Success) userId = long.Parse(ticketMatch.Groups["userId"].Value);
                     }
+
+                    if (userId != 0)
+                    {
+                        ProcessUserIdCache[process.Id] = userId;
+                    }
                     return userId;
                 }
             }
@@ -311,6 +321,15 @@ namespace Goosetrap.UI.ViewModels.Settings
             {
                 var robloxProcesses = Process.GetProcessesByName("RobloxPlayerBeta");
                 var runningAccountIds = new Dictionary<long, Process>();
+
+                // Очищаем кэш от закрытых процессов
+                var runningPids = robloxProcesses.Select(p => p.Id).ToHashSet();
+                var cachedPids = ProcessUserIdCache.Keys.ToList();
+                foreach (int pid in cachedPids)
+                {
+                    if (!runningPids.Contains(pid))
+                        ProcessUserIdCache.Remove(pid);
+                }
 
                 foreach (var process in robloxProcesses)
                 {

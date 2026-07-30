@@ -1,0 +1,5 @@
+PublishOutput/
+bin/
+obj/
+*.user
+.vs/
