@@ -96,64 +96,15 @@ namespace Goosetrap.UI.ViewModels.Settings
                 // Записываем куки в локальное хранилище Roblox, чтобы Desktop App был авторизован
                 AccountsHelper.SetRobloxCookie(cookie);
 
-                // Находим путь к RobloxPlayerBeta.exe
-                string? playerDir = null;
-                using (var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\Goosetrap"))
-                {
-                    playerDir = key?.GetValue("PlayerPath") as string;
-                }
-
-                if (string.IsNullOrEmpty(playerDir))
-                {
-                    Frontend.ShowMessageBox(Strings.Menu_Accounts_PathError, MessageBoxImage.Error);
-                    return;
-                }
-
-                string playerExe = Path.Combine(playerDir, "RobloxPlayerBeta.exe");
-                if (!File.Exists(playerExe))
-                {
-                    Frontend.ShowMessageBox(string.Format(Strings.Menu_Accounts_FileError, playerExe), MessageBoxImage.Error);
-                    return;
-                }
-
-                // Применяем FastFlags (FPS Cap, Potato Mode и т.д.) перед запуском
-                try
-                {
-                    if (App.Settings.Prop.UseFastFlagManager && File.Exists(App.FastFlags.FileLocation))
-                    {
-                        string clientSettingsDir = Path.Combine(playerDir, "ClientSettings");
-                        if (!Directory.Exists(clientSettingsDir))
-                            Directory.CreateDirectory(clientSettingsDir);
-
-                        File.Copy(App.FastFlags.FileLocation, Path.Combine(clientSettingsDir, "ClientAppSettings.json"), true);
-                        App.Logger.WriteLine(LOG_IDENT, "Applied ClientAppSettings.json (FastFlags)");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    App.Logger.WriteException(LOG_IDENT, ex);
-                }
-
-                // Запускаем RobloxPlayerBeta.exe напрямую — это позволяет мульти-инстанс
-                if (App.Settings.Prop.MultiInstanceLaunching)
-                {
-                    if (!Utilities.DoesMutexExist("ROBLOX_singletonMutex"))
-                    {
-                        App.Logger.WriteLine(LOG_IDENT, "Starting multi-instance watcher...");
-                        using System.Threading.EventWaitHandle initEventHandle = new System.Threading.EventWaitHandle(false, System.Threading.EventResetMode.AutoReset, "Goosetrap-MultiInstanceWatcherInitialisationFinished");
-                        Process.Start(Paths.Process, "-multiinstancewatcher");
-                        initEventHandle.WaitOne(TimeSpan.FromSeconds(2));
-                    }
-                }
-
+                // Запускаем Roblox через наш бутстраппер Goosetrap.exe
                 string launchArgs = $"--app --gameinfo={ticket} --launchtime={DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}";
-                App.Logger.WriteLine(LOG_IDENT, $"Launching Roblox directly for {Username} (UserId={UserId})...");
+                App.Logger.WriteLine(LOG_IDENT, $"Launching Roblox via Goosetrap bootstrapper for {Username}...");
 
                 var proc = Process.Start(new ProcessStartInfo
                 {
-                    FileName = playerExe,
-                    Arguments = launchArgs,
-                    WorkingDirectory = playerDir,
+                    FileName = Paths.Process,
+                    Arguments = $"-player \"{launchArgs}\"",
+                    WorkingDirectory = Path.GetDirectoryName(Paths.Process),
                     UseShellExecute = false
                 });
 
