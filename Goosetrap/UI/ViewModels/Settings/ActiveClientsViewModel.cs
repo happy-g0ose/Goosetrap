@@ -169,31 +169,28 @@ namespace Goosetrap.UI.ViewModels.Settings
                     var existingClient = Clients.FirstOrDefault(c => c.Pid == process.Id);
                     if (existingClient != null)
                     {
-                        // Если PlaceId ещё 0 (игра загружалась) или Username неизвестен, пробуем перепарсить лог
-                        if (existingClient.PlaceId == 0 || existingClient.Username == Strings.Menu_ActiveClients_Unknown)
+                        // Парсим лог на каждом тике, чтобы отслеживать переходы (телепорты) между плейсами
+                        var logData = ParseLogFile(process, usedLogs, existingClient.LogFilePath);
+                        
+                        // Если PlaceId изменился или изначально был 0
+                        if (logData.placeId != 0 && logData.placeId != existingClient.PlaceId)
                         {
-                            var logData = ParseLogFile(process, usedLogs, existingClient.LogFilePath);
-                            
-                            // Обновляем PlaceId если его не было
-                            if (existingClient.PlaceId == 0 && logData.placeId != 0)
-                            {
-                                existingClient.PlaceId = logData.placeId;
-                                existingClient.UniverseId = logData.universeId;
-                                _ = FetchGameNameAsync(existingClient);
-                            }
-                            
-                            // Обновляем никнейм если он появился в логе
-                            if (existingClient.Username == Strings.Menu_ActiveClients_Unknown && logData.username != Strings.Menu_ActiveClients_Unknown)
-                            {
-                                existingClient.Username = logData.username;
-                                existingClient.DisplayName = logData.displayName;
-                            }
+                            existingClient.PlaceId = logData.placeId;
+                            existingClient.UniverseId = logData.universeId;
+                            _ = FetchGameNameAsync(existingClient);
+                        }
+                        
+                        // Обновляем никнейм если он появился в логе и не был установлен
+                        if (existingClient.Username == Strings.Menu_ActiveClients_Unknown && logData.username != Strings.Menu_ActiveClients_Unknown)
+                        {
+                            existingClient.Username = logData.username;
+                            existingClient.DisplayName = logData.displayName;
+                        }
 
-                            if (!string.IsNullOrEmpty(logData.logFilePath) && string.IsNullOrEmpty(existingClient.LogFilePath)) 
-                            {
-                                existingClient.LogFilePath = logData.logFilePath;
-                                usedLogs.Add(logData.logFilePath);
-                            }
+                        if (!string.IsNullOrEmpty(logData.logFilePath) && string.IsNullOrEmpty(existingClient.LogFilePath)) 
+                        {
+                            existingClient.LogFilePath = logData.logFilePath;
+                            usedLogs.Add(logData.logFilePath);
                         }
                         continue;
                     }
