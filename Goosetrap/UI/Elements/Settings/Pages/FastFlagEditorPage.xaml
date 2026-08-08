@@ -44,12 +44,12 @@
         </WrapPanel>
 
         <StackPanel Grid.Row="3" Margin="0,0,0,16">
-            <TextBlock Text="⚡ Быстрые конфигурации (Пресетов)" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            <TextBlock Text="Быстрые конфигурации флагов" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,10" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
             <WrapPanel Orientation="Horizontal">
-                <ui:Button Icon="Play28" Content="🚀 Potato PC (Макс FPS)" Click="PresetPotato_Click" Appearance="Primary" Margin="0,0,8,8" />
-                <ui:Button Icon="Settings28" Content="💎 Ultra Graphics (Ультра)" Click="PresetUltra_Click" Margin="0,0,8,8" />
-                <ui:Button Icon="Wrench24" Content="⚖️ Balanced (Баланс)" Click="PresetBalanced_Click" Margin="0,0,8,8" />
-                <ui:Button Icon="ArrowCounterclockwise24" Content="🔄 Сброс всех флагов" Click="PresetReset_Click" Appearance="Secondary" Margin="0,0,8,8" />
+                <ui:Button Icon="Play28" Content="Potato PC (Макс FPS)" Click="PresetPotato_Click" Appearance="Primary" Margin="0,0,10,8" Padding="12,8,16,8" />
+                <ui:Button Icon="PaintBrush24" Content="Ultra Graphics (Ультра)" Click="PresetUltra_Click" Margin="0,0,10,8" Padding="12,8,16,8" />
+                <ui:Button Icon="WrenchScrewdriver20" Content="Balanced (Баланс)" Click="PresetBalanced_Click" Margin="0,0,10,8" Padding="12,8,16,8" />
+                <ui:Button Icon="ArrowCounterclockwise24" Content="Сбросить все флаги" Click="PresetReset_Click" Appearance="Secondary" Margin="0,0,10,8" Padding="12,8,16,8" />
             </WrapPanel>
         </StackPanel>
 
