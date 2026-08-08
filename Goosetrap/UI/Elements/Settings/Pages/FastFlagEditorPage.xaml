@@ -16,6 +16,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -42,9 +43,19 @@
             <ui:Button Icon="ArrowExportRtl24" Content="{x:Static resources:Strings.Menu_FastFlagEditor_ExportJson}" Click="ExportJSONButton_Click" Margin="0,0,12,16" />
         </WrapPanel>
 
-        <ui:TextBox x:Name="SearchTextBox" Grid.Row="3" Margin="0,0,0,16" Icon="Search32" PlaceholderText="{x:Static resources:Strings.Menu_FastFlagEditor_Search}" TextChanged="SearchTextBox_TextChanged" />
+        <StackPanel Grid.Row="3" Margin="0,0,0,16">
+            <TextBlock Text="⚡ Быстрые конфигурации (Пресетов)" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            <WrapPanel Orientation="Horizontal">
+                <ui:Button Icon="Flash24" Content="🚀 Potato PC (Макс FPS)" Click="PresetPotato_Click" Appearance="Primary" Margin="0,0,8,8" />
+                <ui:Button Icon="Sparkles24" Content="💎 Ultra Graphics (Ультра)" Click="PresetUltra_Click" Margin="0,0,8,8" />
+                <ui:Button Icon="Meter24" Content="⚖️ Balanced (Баланс)" Click="PresetBalanced_Click" Margin="0,0,8,8" />
+                <ui:Button Icon="ArrowReset24" Content="🔄 Сброс всех флагов" Click="PresetReset_Click" Appearance="Secondary" Margin="0,0,8,8" />
+            </WrapPanel>
+        </StackPanel>
 
-        <DataGrid Name="DataGrid" Grid.Row="4" HeadersVisibility="Column" GridLinesVisibility="Horizontal" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CellEditEnding="DataGrid_CellEditEnding" CanUserReorderColumns="False">
+        <ui:TextBox x:Name="SearchTextBox" Grid.Row="4" Margin="0,0,0,16" Icon="Search32" PlaceholderText="{x:Static resources:Strings.Menu_FastFlagEditor_Search}" TextChanged="SearchTextBox_TextChanged" />
+
+        <DataGrid Name="DataGrid" Grid.Row="5" HeadersVisibility="Column" GridLinesVisibility="Horizontal" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CellEditEnding="DataGrid_CellEditEnding" CanUserReorderColumns="False">
             <DataGrid.Style>
                 <Style TargetType="DataGrid" BasedOn="{StaticResource {x:Type DataGrid}}">
                     <Setter Property="Background" Value="Transparent" />

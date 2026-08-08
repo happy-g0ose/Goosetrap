@@ -355,5 +355,96 @@ namespace Goosetrap.UI.Elements.Settings.Pages
             _searchFilter = textbox.Text;
             ReloadList();
         }
+
+        private void ApplyPresetDictionary(Dictionary<string, object> flags, string presetName)
+        {
+            var result = Frontend.ShowMessageBox(
+                $"Применить конфигурацию «{presetName}»?\nЭто обновит соответствующие значения FastFlag.",
+                MessageBoxImage.Question,
+                MessageBoxButton.YesNo
+            );
+
+            if (result != MessageBoxResult.Yes)
+                return;
+
+            foreach (var pair in flags)
+            {
+                App.FastFlags.SetValue(pair.Key, pair.Value);
+            }
+
+            ClearSearch();
+            Frontend.ShowMessageBox($"Конфигурация «{presetName}» успешно применена!", MessageBoxImage.Information);
+        }
+
+        private void PresetPotato_Click(object sender, RoutedEventArgs e)
+        {
+            var potatoFlags = new Dictionary<string, object>
+            {
+                { "DFIntTaskSchedulerTargetFps", "9999" },
+                { "FFlagGameRealTimeD3D11DisableVsync", "True" },
+                { "FFlagDebugForceDisableShadows", "True" },
+                { "FFlagDebugForceDisableAntiAliasing", "True" },
+                { "FFlagDebugDisablePostEffects", "True" },
+                { "DFFlagTextureQualityOverrideEnabled", "True" },
+                { "DFIntTextureQualityOverride", "3" },
+                { "FIntDebugForceMSAASamples", "1" },
+                { "FFlagDebugForceFutureIsBrightPhase3", "False" },
+                { "DFIntCSGLevelOfDetailSwitchingDistance", "0" }
+            };
+
+            ApplyPresetDictionary(potatoFlags, "Potato PC (Макс FPS)");
+        }
+
+        private void PresetUltra_Click(object sender, RoutedEventArgs e)
+        {
+            var ultraFlags = new Dictionary<string, object>
+            {
+                { "DFIntTaskSchedulerTargetFps", "9999" },
+                { "FFlagGameRealTimeD3D11DisableVsync", "True" },
+                { "FFlagDebugForceDisableShadows", "False" },
+                { "FFlagDebugForceDisableAntiAliasing", "False" },
+                { "FFlagDebugDisablePostEffects", "False" },
+                { "DFFlagTextureQualityOverrideEnabled", "True" },
+                { "DFIntTextureQualityOverride", "3" },
+                { "FIntDebugForceMSAASamples", "4" },
+                { "FFlagDebugForceFutureIsBrightPhase3", "True" }
+            };
+
+            ApplyPresetDictionary(ultraFlags, "Ultra Graphics");
+        }
+
+        private void PresetBalanced_Click(object sender, RoutedEventArgs e)
+        {
+            var balancedFlags = new Dictionary<string, object>
+            {
+                { "DFIntTaskSchedulerTargetFps", "9999" },
+                { "FFlagGameRealTimeD3D11DisableVsync", "True" },
+                { "FFlagDebugDisablePostEffects", "True" },
+                { "FFlagDisableInGameMenuBlur", "True" }
+            };
+
+            ApplyPresetDictionary(balancedFlags, "Balanced");
+        }
+
+        private void PresetReset_Click(object sender, RoutedEventArgs e)
+        {
+            var result = Frontend.ShowMessageBox(
+                "Сбросить все пользовательские FastFlags к стандартным настройкам?",
+                MessageBoxImage.Warning,
+                MessageBoxButton.YesNo
+            );
+
+            if (result != MessageBoxResult.Yes)
+                return;
+
+            var keysToRemove = App.FastFlags.Prop.Keys.ToList();
+            foreach (var key in keysToRemove)
+            {
+                App.FastFlags.SetValue(key, null);
+            }
+
+            ClearSearch();
+            Frontend.ShowMessageBox("Все кастомные флаги сброшены!", MessageBoxImage.Information);
+        }
     }
 }
