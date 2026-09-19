@@ -105,6 +105,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="{x:Static resources:Strings.Common_Name}" Binding="{Binding Name}" />
                 <DataGridTextColumn Header="{x:Static resources:Strings.Common_Value}" Binding="{Binding Value}" Width="*" />
+                <DataGridTextColumn Header="{x:Static resources:Strings.Common_AllowlistStatus}" Binding="{Binding AllowlistStatus}" IsReadOnly="True" Width="Auto" MinWidth="140" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

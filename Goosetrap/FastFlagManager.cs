@@ -1,4 +1,5 @@
 using Goosetrap.Enums.FlagPresets;
+using Goosetrap.RobloxInterfaces;
 using System.Security.Policy;
 using System.Windows;
 
@@ -153,6 +154,18 @@ namespace Goosetrap
         }
 
         public bool IsPreset(string Flag) => PresetFlags.Values.Any(v => v.ToLower() == Flag.ToLower());
+
+        /// <summary>
+        /// Whether Roblox will actually apply the given Fast Flag. Since the introduction of the Roblox
+        /// Fast Flag Allowlist, any flag that isn't on it is silently ignored by the current client.
+        /// See <see cref="FFlagAllowlist"/>.
+        /// </summary>
+        public static bool IsAllowlisted(string flag) => FFlagAllowlist.IsAllowed(flag);
+
+        /// <summary>
+        /// The subset of <see cref="PresetFlags"/> that the current Roblox client still applies.
+        /// </summary>
+        public static IEnumerable<string> AllowlistedPresetFlags => PresetFlags.Values.Where(IsAllowlisted);
 
         public override void Save()
         {

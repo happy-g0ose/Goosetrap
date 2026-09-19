@@ -180,6 +180,12 @@
   <data name="Common.AddSingle" xml:space="preserve">
     <value>Add single</value>
   </data>
+  <data name="Common.Allowlisted" xml:space="preserve">
+    <value>Allowlisted</value>
+  </data>
+  <data name="Common.AllowlistStatus" xml:space="preserve">
+    <value>Applied by Roblox</value>
+  </data>
   <data name="Common.Browse" xml:space="preserve">
     <value>Browse</value>
   </data>
@@ -1120,6 +1126,9 @@ Every person here is ranked by their overall pledge.</value>
     <value>Goosetrap has been installed to this location before and is still present, however the installer cannot overwrite the old executable. 
 
 Please manually delete Goosetrap.exe from the install location or try restarting your system, and then retry installation afterwards.</value>
+  </data>
+  <data name="Common.NotAllowlisted" xml:space="preserve">
+    <value>Ignored by Roblox</value>
   </data>
   <data name="Common.NotAvailable" xml:space="preserve">
     <value>Not available</value>

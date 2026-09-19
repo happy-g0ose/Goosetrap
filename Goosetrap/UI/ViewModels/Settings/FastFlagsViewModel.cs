@@ -3,6 +3,7 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 
 using Goosetrap.Enums.FlagPresets;
+using Goosetrap.RobloxInterfaces;
 using System.Windows;
 using Goosetrap.UI.Elements.Settings.Pages;
 using Wpf.Ui.Mvvm.Contracts;
@@ -164,7 +165,10 @@ namespace Goosetrap.UI.ViewModels.Settings
 
         public bool PotatoGraphicsEnabled
         {
-            get => App.FastFlags.GetValue("FIntDebugTextureManagerSkipMips") == "4";
+            // "FIntDebugTextureManagerSkipMips" is a marker left over from the pre-allowlist clients,
+            // FFlagDebugSkyGray is on Roblox's Fast Flag Allowlist and is only ever set by potato mode
+            get => App.FastFlags.GetValue("FIntDebugTextureManagerSkipMips") == "4"
+                || App.FastFlags.GetValue(FFlagAllowlist.SkyGray) == "True";
             set
             {
                 if (value)
@@ -172,6 +176,15 @@ namespace Goosetrap.UI.ViewModels.Settings
                     App.FastFlags.SetValue("FIntDebugTextureManagerSkipMips", "4");
                     App.FastFlags.SetValue("DFFlagTextureQualityOverrideEnabled", "True");
                     App.FastFlags.SetValue("DFIntTextureQualityOverride", "0");
+
+                    // allowlisted flags, these are the only ones the current client actually applies
+                    App.FastFlags.SetValue(FFlagAllowlist.ForceMSAASamples, "1");
+                    App.FastFlags.SetValue(FFlagAllowlist.CSGLevelOfDetailSwitchingDistance, "0");
+                    App.FastFlags.SetValue(FFlagAllowlist.CSGLevelOfDetailSwitchingDistanceL12, "0");
+                    App.FastFlags.SetValue(FFlagAllowlist.CSGLevelOfDetailSwitchingDistanceL23, "0");
+                    App.FastFlags.SetValue(FFlagAllowlist.CSGLevelOfDetailSwitchingDistanceL34, "0");
+                    App.FastFlags.SetValue(FFlagAllowlist.GrassMovementReducedMotionFactor, "0");
+                    App.FastFlags.SetValue(FFlagAllowlist.SkyGray, "True");
                     App.FastFlags.SetValue("FIntFRMMinGrassDistance", "0");
                     App.FastFlags.SetValue("FIntFRMMaxGrassDistance", "0");
                     App.FastFlags.SetValue("FIntRenderGrassDetailStrands", "0");
@@ -188,6 +201,13 @@ namespace Goosetrap.UI.ViewModels.Settings
                     App.FastFlags.SetValue("FIntDebugTextureManagerSkipMips", null);
                     App.FastFlags.SetValue("DFFlagTextureQualityOverrideEnabled", null);
                     App.FastFlags.SetValue("DFIntTextureQualityOverride", null);
+                    App.FastFlags.SetValue(FFlagAllowlist.ForceMSAASamples, null);
+                    App.FastFlags.SetValue(FFlagAllowlist.CSGLevelOfDetailSwitchingDistance, null);
+                    App.FastFlags.SetValue(FFlagAllowlist.CSGLevelOfDetailSwitchingDistanceL12, null);
+                    App.FastFlags.SetValue(FFlagAllowlist.CSGLevelOfDetailSwitchingDistanceL23, null);
+                    App.FastFlags.SetValue(FFlagAllowlist.CSGLevelOfDetailSwitchingDistanceL34, null);
+                    App.FastFlags.SetValue(FFlagAllowlist.GrassMovementReducedMotionFactor, null);
+                    App.FastFlags.SetValue(FFlagAllowlist.SkyGray, null);
                     App.FastFlags.SetValue("FIntFRMMinGrassDistance", null);
                     App.FastFlags.SetValue("FIntFRMMaxGrassDistance", null);
                     App.FastFlags.SetValue("FIntRenderGrassDetailStrands", null);

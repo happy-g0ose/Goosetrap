@@ -122,6 +122,12 @@
   <data name="Common.AddSingle" xml:space="preserve">
     <value>Добавить один</value>
   </data>
+  <data name="Common.Allowlisted" xml:space="preserve">
+    <value>Применяется</value>
+  </data>
+  <data name="Common.AllowlistStatus" xml:space="preserve">
+    <value>Применяется Roblox</value>
+  </data>
   <data name="Common.Browse" xml:space="preserve">
     <value>Обзор</value>
   </data>
@@ -1042,6 +1048,9 @@ Goosetrap был установлен по адресу "{1}".</value>
     <value>Goosetrap был установлен в это место раньше и до сих пор присутствует, однако программа установки не может перезаписать старый исполняемый файл. 
 
 Пожалуйста, удалите вручную Goosetrap.exe из местоположения установки или попробуйте перезапустить систему, а затем попробуйте установить снова.</value>
+  </data>
+  <data name="Common.NotAllowlisted" xml:space="preserve">
+    <value>Игнорируется</value>
   </data>
   <data name="Common.NotAvailable" xml:space="preserve">
     <value>Недоступно</value>

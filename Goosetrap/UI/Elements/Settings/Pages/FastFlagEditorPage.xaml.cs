@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using Wpf.Ui.Mvvm.Contracts;
 
 using Goosetrap.UI.Elements.Dialogs;
+using Goosetrap.RobloxInterfaces;
 using Newtonsoft.Json.Linq;
 using System.Xml.Linq;
 
@@ -49,7 +50,8 @@ namespace Goosetrap.UI.Elements.Settings.Pages
                 {
                     // Enabled = true,
                     Name = pair.Key,
-                    Value = pair.Value.ToString()!
+                    Value = pair.Value.ToString()!,
+                    Allowlisted = FastFlagManager.IsAllowlisted(pair.Key)
                 };
 
                 /* if (entry.Name.StartsWith("Disable"))
@@ -109,7 +111,8 @@ namespace Goosetrap.UI.Elements.Settings.Pages
                 {
                     // Enabled = true,
                     Name = name,
-                    Value = value
+                    Value = value,
+                    Allowlisted = FastFlagManager.IsAllowlisted(name)
                 };
 
                 if (!name.Contains(_searchFilter))
@@ -378,18 +381,34 @@ namespace Goosetrap.UI.Elements.Settings.Pages
 
         private void PresetPotato_Click(object sender, RoutedEventArgs e)
         {
+            // the flags marked as allowlisted are the ones the current Roblox client still applies,
+            // everything else is used to be handled by older clients before Roblox introduced the
+            // Fast Flag Allowlist and is kept around in case they get allowlisted again
+            // https://devforum.roblox.com/t/allowlist-for-local-client-configuration-via-fast-flags/3966569
             var potatoFlags = new Dictionary<string, object>
             {
+                // framerate
                 { "DFIntTaskSchedulerTargetFps", "9999" },
                 { "FFlagGameRealTimeD3D11DisableVsync", "True" },
+
+                // textures, mesh detail and grass (allowlisted)
+                { FFlagAllowlist.TextureQualityOverrideEnabled, "True" },
+                { FFlagAllowlist.TextureQualityOverride, "0" },
+                { FFlagAllowlist.ForceMSAASamples, "1" },
+                { FFlagAllowlist.CSGLevelOfDetailSwitchingDistance, "0" },
+                { FFlagAllowlist.CSGLevelOfDetailSwitchingDistanceL12, "0" },
+                { FFlagAllowlist.CSGLevelOfDetailSwitchingDistanceL23, "0" },
+                { FFlagAllowlist.CSGLevelOfDetailSwitchingDistanceL34, "0" },
+                { FFlagAllowlist.FRMMinGrassDistance, "0" },
+                { FFlagAllowlist.FRMMaxGrassDistance, "0" },
+                { FFlagAllowlist.GrassMovementReducedMotionFactor, "0" },
+                { FFlagAllowlist.SkyGray, "True" },
+
+                // shadows, anti-aliasing and post processing
                 { "FFlagDebugForceDisableShadows", "True" },
                 { "FFlagDebugForceDisableAntiAliasing", "True" },
                 { "FFlagDebugDisablePostEffects", "True" },
-                { "DFFlagTextureQualityOverrideEnabled", "True" },
-                { "DFIntTextureQualityOverride", "3" },
-                { "FIntDebugForceMSAASamples", "1" },
-                { "FFlagDebugForceFutureIsBrightPhase3", "False" },
-                { "DFIntCSGLevelOfDetailSwitchingDistance", "0" }
+                { "FFlagDebugForceFutureIsBrightPhase3", "False" }
             };
 
             ApplyPresetDictionary(potatoFlags, "Potato PC (Макс FPS)");
@@ -399,14 +418,21 @@ namespace Goosetrap.UI.Elements.Settings.Pages
         {
             var ultraFlags = new Dictionary<string, object>
             {
+                // framerate
                 { "DFIntTaskSchedulerTargetFps", "9999" },
                 { "FFlagGameRealTimeD3D11DisableVsync", "True" },
+
+                // textures, mesh detail and sky (allowlisted)
+                { FFlagAllowlist.TextureQualityOverrideEnabled, "True" },
+                { FFlagAllowlist.TextureQualityOverride, "3" },
+                { FFlagAllowlist.ForceMSAASamples, "4" },
+                { FFlagAllowlist.FRMQualityLevelOverride, "21" },
+                { FFlagAllowlist.SkyGray, "False" },
+
+                // shadows, anti-aliasing and post processing
                 { "FFlagDebugForceDisableShadows", "False" },
                 { "FFlagDebugForceDisableAntiAliasing", "False" },
                 { "FFlagDebugDisablePostEffects", "False" },
-                { "DFFlagTextureQualityOverrideEnabled", "True" },
-                { "DFIntTextureQualityOverride", "3" },
-                { "FIntDebugForceMSAASamples", "4" },
                 { "FFlagDebugForceFutureIsBrightPhase3", "True" }
             };
 
@@ -417,8 +443,17 @@ namespace Goosetrap.UI.Elements.Settings.Pages
         {
             var balancedFlags = new Dictionary<string, object>
             {
+                // framerate
                 { "DFIntTaskSchedulerTargetFps", "9999" },
                 { "FFlagGameRealTimeD3D11DisableVsync", "True" },
+
+                // textures and anti-aliasing (allowlisted)
+                { FFlagAllowlist.TextureQualityOverrideEnabled, "True" },
+                { FFlagAllowlist.TextureQualityOverride, "2" },
+                { FFlagAllowlist.ForceMSAASamples, "1" },
+                { FFlagAllowlist.SkyGray, "False" },
+
+                // post processing
                 { "FFlagDebugDisablePostEffects", "True" },
                 { "FFlagDisableInGameMenuBlur", "True" }
             };

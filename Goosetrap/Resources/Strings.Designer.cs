@@ -475,6 +475,24 @@ namespace Goosetrap.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allowlisted.
+        /// </summary>
+        public static string Common_Allowlisted {
+            get {
+                return ResourceManager.GetString("Common.Allowlisted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Applied by Roblox.
+        /// </summary>
+        public static string Common_AllowlistStatus {
+            get {
+                return ResourceManager.GetString("Common.AllowlistStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Analytics.
         /// </summary>
         public static string Common_Analytics {
@@ -777,6 +795,15 @@ namespace Goosetrap.Resources {
         public static string Common_No {
             get {
                 return ResourceManager.GetString("Common.No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignored by Roblox.
+        /// </summary>
+        public static string Common_NotAllowlisted {
+            get {
+                return ResourceManager.GetString("Common.NotAllowlisted", resourceCulture);
             }
         }
         
