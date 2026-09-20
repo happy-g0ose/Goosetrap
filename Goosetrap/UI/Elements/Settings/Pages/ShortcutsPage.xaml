@@ -19,8 +19,8 @@
 
         <controls:OptionControl 
             Header="{x:Static resources:Strings.Menu_Shortcuts_ExtractIcons_Title}" 
-            Description="{Binding Source={x:Static resources:Strings.Menu_Shortcuts_ExtractIcons_Description}, Converter={StaticResource StringFormatConverter},ConverterParameter='https://github.com/Goosetraplabs/Goosetrap/wiki/Using-Roblox-icons-for-your-shortcuts'}"
-            HelpLink="https://github.com/Goosetraplabs/Goosetrap/wiki/Using-Roblox-icons-for-your-shortcuts"
+            Description="{Binding Source={x:Static resources:Strings.Menu_Shortcuts_ExtractIcons_Description}, Converter={StaticResource StringFormatConverter},ConverterParameter='https://github.com/happy-g0ose/Goosetrap/wiki/Using-Roblox-icons-for-your-shortcuts'}"
+            HelpLink="https://github.com/happy-g0ose/Goosetrap/wiki/Using-Roblox-icons-for-your-shortcuts"
             Margin="0,0,0,16">
             <ui:ToggleSwitch IsChecked="{Binding ExtractIconsTask.NewState, Mode=TwoWay}" />
         </controls:OptionControl>

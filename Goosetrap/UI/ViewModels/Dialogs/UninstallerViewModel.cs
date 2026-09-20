@@ -9,7 +9,7 @@ namespace Goosetrap.UI.ViewModels.Dialogs
     {
         public string Text => String.Format(
             Strings.Uninstaller_Text, 
-            "https://github.com/Goosetraplabs/Goosetrap/wiki/Roblox-crashes-or-does-not-launch",
+            "https://github.com/happy-g0ose/Goosetrap/wiki/Roblox-crashes-or-does-not-launch",
             Paths.Base
         );
 

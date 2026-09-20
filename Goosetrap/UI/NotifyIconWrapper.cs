@@ -78,12 +78,20 @@ namespace Goosetrap.UI
             if (uptimeActive)
             {
                 DateTime? serverTime = await _activityWatcher.Data.QueryServerTime();
-                TimeSpan _serverUptime = DateTime.UtcNow - serverTime.Value;
 
-                if (_serverUptime.TotalSeconds > 60)
-                    serverUptime = Time.FormatTimeSpan(_serverUptime);
-                else
+                if (serverTime is null)
+                {
                     serverUptime = Strings.ContextMenu_ServerInformation_Notification_ServerNotTracked;
+                }
+                else
+                {
+                    TimeSpan uptime = DateTime.UtcNow - serverTime.Value;
+
+                    if (uptime.TotalSeconds > 60)
+                        serverUptime = Time.FormatTimeSpan(uptime);
+                    else
+                        serverUptime = Strings.ContextMenu_ServerInformation_Notification_ServerNotTracked;
+                }
             }
 
             if (

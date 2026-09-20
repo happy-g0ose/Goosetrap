@@ -1,8 +1,9 @@
 name: Publish to Winget
 
+# manual only - the winget package has to exist before this can publish anything to it,
+# and it used to run automatically on every published release as Fishstrap.Fishstrap
 on:
-  release:
-    types: [released]
+  workflow_dispatch:
 
 jobs:
   publish:
@@ -10,5 +11,5 @@ jobs:
     steps:
       - uses: vedantmgoyal9/winget-releaser@main
         with:
-          identifier: Fishstrap.Fishstrap
+          identifier: Goosetrap.Goosetrap
           token: ${{ secrets.WINGET_TOKEN }}

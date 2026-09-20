@@ -1741,7 +1741,7 @@ namespace Goosetrap
                     {
                         Frontend.ShowConnectivityDialog(
                             Strings.Dialog_Connectivity_UnableToDownload,
-                            String.Format(Strings.Dialog_Connectivity_UnableToDownloadReason, "[https://github.com/Goosetraplabs/Goosetrap/wiki/Goosetrap-is-unable-to-download-Roblox](https://github.com/Goosetraplabs/Goosetrap/wiki/Goosetrap-is-unable-to-download-Roblox)"),
+                            String.Format(Strings.Dialog_Connectivity_UnableToDownloadReason, "[https://github.com/happy-g0ose/Goosetrap/wiki/Goosetrap-is-unable-to-download-Roblox](https://github.com/happy-g0ose/Goosetrap/wiki/Goosetrap-is-unable-to-download-Roblox)"),
                             MessageBoxImage.Error,
                             ex
                         );

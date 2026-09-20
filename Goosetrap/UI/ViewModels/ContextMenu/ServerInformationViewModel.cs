@@ -48,11 +48,16 @@ namespace Goosetrap.UI.ViewModels.ContextMenu
         public async void QueryServerUptime()
         {
             DateTime? serverTime = await _activityWatcher.Data.QueryServerTime();
-            TimeSpan _serverUptime = DateTime.UtcNow - serverTime.Value;
 
-            string? serverUptime = Strings.ContextMenu_ServerInformation_Notification_ServerNotTracked;
-            if (_serverUptime.TotalSeconds > 60)
-                serverUptime = Time.FormatTimeSpan(_serverUptime);
+            string serverUptime = Strings.ContextMenu_ServerInformation_Notification_ServerNotTracked;
+
+            if (serverTime is not null)
+            {
+                TimeSpan uptime = DateTime.UtcNow - serverTime.Value;
+
+                if (uptime.TotalSeconds > 60)
+                    serverUptime = Time.FormatTimeSpan(uptime);
+            }
 
             ServerUptime = serverUptime;
 

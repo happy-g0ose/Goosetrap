@@ -13,7 +13,7 @@ namespace Goosetrap.Utility
         {
             foreach (var drive in DriveInfo.GetDrives())
             {
-                // https://github.com/Goosetraplabs/Goosetrap/issues/1648#issuecomment-2192571030
+                // https://github.com/happy-g0ose/Goosetrap/issues/1648#issuecomment-2192571030
                 if (path.ToUpperInvariant().StartsWith(drive.Name))
                     return drive.AvailableFreeSpace;
             }

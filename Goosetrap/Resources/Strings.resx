@@ -1912,4 +1912,74 @@ Defaulting to {1}.</value>
   <data name="Menu.ActiveClients.UptimeLabel" xml:space="preserve">
     <value>Uptime: </value>
   </data>
+  <data name="Menu.Accounts.Add.AlreadyAdded" xml:space="preserve">
+    <value>This account has already been added!</value>
+  </data>
+  <data name="Menu.Accounts.Add.Confirm" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Menu.Accounts.Add.CookiePlaceholder" xml:space="preserve">
+    <value>Paste the .ROBLOSECURITY cookie here...</value>
+  </data>
+  <data name="Menu.Accounts.Add.Description" xml:space="preserve">
+    <value>Enter the .ROBLOSECURITY cookie to authorise the account:</value>
+  </data>
+  <data name="Menu.Accounts.Add.EmptyCookie" xml:space="preserve">
+    <value>The cookie cannot be empty!</value>
+  </data>
+  <data name="Menu.Accounts.Add.Heading" xml:space="preserve">
+    <value>Add a Roblox account</value>
+  </data>
+  <data name="Menu.Accounts.Add.InvalidCookie" xml:space="preserve">
+    <value>Could not authorise the cookie. Check that you entered it correctly!</value>
+  </data>
+  <data name="Menu.Accounts.Add.Title" xml:space="preserve">
+    <value>Add account</value>
+  </data>
+  <data name="Menu.Accounts.DeleteConfirm" xml:space="preserve">
+    <value>Are you sure you want to delete the account {0}?</value>
+  </data>
+  <data name="Menu.Accounts.DeleteConfirm.Title" xml:space="preserve">
+    <value>Confirm deletion</value>
+  </data>
+  <data name="Menu.Accounts.RefreshCookiePlaceholder" xml:space="preserve">
+    <value>Paste the new cookie to refresh the session...</value>
+  </data>
+  <data name="Menu.Accounts.Status.Running" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="Menu.Accounts.Status.Stopped" xml:space="preserve">
+    <value>Not running</value>
+  </data>
+  <data name="Menu.ActiveClients.NoClients" xml:space="preserve">
+    <value>No running Roblox windows</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Presets.Applied" xml:space="preserve">
+    <value>The "{0}" configuration was applied successfully!</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Presets.Balanced" xml:space="preserve">
+    <value>Balanced</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Presets.Confirm" xml:space="preserve">
+    <value>Apply the "{0}" configuration?
+This will update the matching FastFlag values.</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Presets.Heading" xml:space="preserve">
+    <value>Quick flag presets</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Presets.Potato" xml:space="preserve">
+    <value>Potato PC (max FPS)</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Presets.Reset" xml:space="preserve">
+    <value>Reset all flags</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Presets.ResetConfirm" xml:space="preserve">
+    <value>Reset all custom FastFlags to the default values?</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Presets.ResetDone" xml:space="preserve">
+    <value>All custom flags were reset!</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Presets.Ultra" xml:space="preserve">
+    <value>Ultra graphics</value>
+  </data>
 </root>

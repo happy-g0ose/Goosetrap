@@ -1,0 +1,4 @@
+Тестовый запуск для C:\Users\Пользователь\OneDrive\Desktop\Goosetrap\Goosetrap.Tests\bin\Debug\net8.0-windows\Goosetrap.Tests.dll (.NETCoreApp,Version=v8.0)
+Общее количество тестовых файлов (1), соответствующих указанному шаблону.
+
+Пройден!   : не пройдено     0, пройдено    46, пропущено     0, всего    46, длительность 263 ms. - Goosetrap.Tests.dll (net8.0)

@@ -21,7 +21,7 @@ namespace Goosetrap
         public const string ProjectOwner = "happy-g0ose";
         public const string ProjectRepository = "happy-g0ose/Goosetrap";
         public const string ProjectDownloadLink = "https://github.com/happy-g0ose/Goosetrap/releases";
-        public const string ProjectHelpLink = "https://github.com/Goosetraplabs/Goosetrap/wiki";
+        public const string ProjectHelpLink = "https://github.com/happy-g0ose/Goosetrap/wiki";
         public const string ProjectSupportLink = "https://github.com/happy-g0ose/Goosetrap/issues/new";
         public const string ProjectRemoteDataLink = "https://config.bloxstrap.org/v1/Data.json";
 

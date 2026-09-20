@@ -18,7 +18,7 @@ namespace Goosetrap.Extensions
             try
             {
                 var decoder = new IconBitmapDecoder(stream, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
-                BitmapFrame bestFrame = null;
+                BitmapFrame? bestFrame = null;
                 int maxArea = 0;
                 foreach (var frame in decoder.Frames)
                 {

@@ -5021,5 +5021,143 @@ namespace Goosetrap.Resources {
                 return ResourceManager.GetString("Menu.ActiveClients.UptimeLabel", resourceCulture);
             }
         }
+        
+        public static string Menu_Accounts_Add_AlreadyAdded {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.Add.AlreadyAdded", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_Add_Confirm {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.Add.Confirm", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_Add_CookiePlaceholder {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.Add.CookiePlaceholder", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_Add_Description {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.Add.Description", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_Add_EmptyCookie {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.Add.EmptyCookie", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_Add_Heading {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.Add.Heading", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_Add_InvalidCookie {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.Add.InvalidCookie", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_Add_Title {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.Add.Title", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_DeleteConfirm {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.DeleteConfirm", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_DeleteConfirm_Title {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.DeleteConfirm.Title", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_RefreshCookiePlaceholder {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.RefreshCookiePlaceholder", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_Status_Running {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.Status.Running", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_Status_Stopped {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.Status.Stopped", resourceCulture);
+            }
+        }
+        
+        public static string Menu_ActiveClients_NoClients {
+            get {
+                return ResourceManager.GetString("Menu.ActiveClients.NoClients", resourceCulture);
+            }
+        }
+        
+        public static string Menu_FastFlagEditor_Presets_Applied {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.Presets.Applied", resourceCulture);
+            }
+        }
+        
+        public static string Menu_FastFlagEditor_Presets_Balanced {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.Presets.Balanced", resourceCulture);
+            }
+        }
+        
+        public static string Menu_FastFlagEditor_Presets_Confirm {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.Presets.Confirm", resourceCulture);
+            }
+        }
+        
+        public static string Menu_FastFlagEditor_Presets_Heading {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.Presets.Heading", resourceCulture);
+            }
+        }
+        
+        public static string Menu_FastFlagEditor_Presets_Potato {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.Presets.Potato", resourceCulture);
+            }
+        }
+        
+        public static string Menu_FastFlagEditor_Presets_Reset {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.Presets.Reset", resourceCulture);
+            }
+        }
+        
+        public static string Menu_FastFlagEditor_Presets_ResetConfirm {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.Presets.ResetConfirm", resourceCulture);
+            }
+        }
+        
+        public static string Menu_FastFlagEditor_Presets_ResetDone {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.Presets.ResetDone", resourceCulture);
+            }
+        }
+        
+        public static string Menu_FastFlagEditor_Presets_Ultra {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.Presets.Ultra", resourceCulture);
+            }
+        }
     }
 }
