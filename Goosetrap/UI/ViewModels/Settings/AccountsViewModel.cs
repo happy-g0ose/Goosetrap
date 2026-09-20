@@ -59,7 +59,7 @@ namespace Goosetrap.UI.ViewModels.Settings
             }
         }
 
-        public string StatusText => IsRunning ? "Активен" : "Не запущен";
+        public string StatusText => IsRunning ? Strings.Menu_Accounts_Status_Running : Strings.Menu_Accounts_Status_Stopped;
         public string StatusColor => IsRunning ? "#8AE639" : "#808080";
 
         public ICommand LaunchCommand => new AsyncRelayCommand(LaunchAsync);
@@ -208,7 +208,7 @@ namespace Goosetrap.UI.ViewModels.Settings
                 Owner = Application.Current.MainWindow
             };
             // Pre-fill text with hint
-            dialog.CookieTextBox.PlaceholderText = "Вставьте новые куки для обновления сессии...";
+            dialog.CookieTextBox.PlaceholderText = Strings.Menu_Accounts_RefreshCookiePlaceholder;
 
             if (dialog.ShowDialog() == true)
             {
@@ -235,7 +235,7 @@ namespace Goosetrap.UI.ViewModels.Settings
         {
             if (model == null) return;
 
-            var result = MessageBox.Show($"Вы уверены, что хотите удалить аккаунт {model.DisplayName}?", "Подтверждение удаления", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            var result = MessageBox.Show(String.Format(Strings.Menu_Accounts_DeleteConfirm, model.DisplayName), Strings.Menu_Accounts_DeleteConfirm_Title, MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
                 var entry = App.Accounts.Prop.Accounts.FirstOrDefault(x => x.UserId == model.UserId);
@@ -248,7 +248,7 @@ namespace Goosetrap.UI.ViewModels.Settings
             }
         }
 
-        private static string FindLogFileForProcess(Process process)
+        private static string? FindLogFileForProcess(Process process)
         {
             string logsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Roblox", "logs");
             if (!Directory.Exists(logsDir)) return null;
@@ -284,7 +284,7 @@ namespace Goosetrap.UI.ViewModels.Settings
 
             try
             {
-                string logPath = FindLogFileForProcess(process);
+                string? logPath = FindLogFileForProcess(process);
                 if (!string.IsNullOrEmpty(logPath))
                 {
                     var rbxuidRegex = new Regex(@"rbxuid=(?<userId>\d+)");
@@ -293,7 +293,7 @@ namespace Goosetrap.UI.ViewModels.Settings
                     using var fs = new FileStream(logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                     using var sr = new StreamReader(fs);
                     
-                    string line;
+                    string? line;
                     long userId = 0;
                     while ((line = sr.ReadLine()) != null)
                     {
@@ -357,7 +357,7 @@ namespace Goosetrap.UI.ViewModels.Settings
                         }
                         catch
                         {
-                            account.RamUsage = "Н/Д";
+                            account.RamUsage = Strings.Common_NotAvailable;
                         }
                     }
                     else

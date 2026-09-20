@@ -8,6 +8,6 @@ namespace Goosetrap.Models.APIs.Config
         [JsonPropertyName("name")]
         public string Name { get; set; } = null!;
 
-        public string Image => $"https://raw.githubusercontent.com/Goosetraplabs/config/main/assets/{ImageAsset}";
+        public string Image => $"https://raw.githubusercontent.com/bloxstraplabs/config/main/assets/{ImageAsset}";
     }
 }

@@ -33,7 +33,7 @@ namespace Goosetrap.UI.Elements.Dialogs
 
             if (string.IsNullOrEmpty(rawCookie))
             {
-                ShowError("Куки не может быть пустым!");
+                ShowError(Strings.Menu_Accounts_Add_EmptyCookie);
                 return;
             }
 
@@ -43,7 +43,7 @@ namespace Goosetrap.UI.Elements.Dialogs
             var (success, username, displayName, userId) = await AccountsHelper.ValidateCookieAsync(rawCookie);
             if (!success)
             {
-                ShowError("Не удалось авторизовать куки. Проверьте правильность ввода!");
+                ShowError(Strings.Menu_Accounts_Add_InvalidCookie);
                 AddButton.IsEnabled = true;
                 return;
             }
@@ -51,7 +51,7 @@ namespace Goosetrap.UI.Elements.Dialogs
             // Check if account already exists
             if (App.Accounts.Prop.Accounts.Any(x => x.UserId == userId))
             {
-                ShowError("Этот аккаунт уже добавлен!");
+                ShowError(Strings.Menu_Accounts_Add_AlreadyAdded);
                 AddButton.IsEnabled = true;
                 return;
             }

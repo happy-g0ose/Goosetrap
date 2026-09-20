@@ -1578,4 +1578,74 @@ Goosetrap был установлен по адресу "{1}".</value>
   <data name="Menu.ActiveClients.UptimeLabel" xml:space="preserve">
     <value>Время работы: </value>
   </data>
+  <data name="Menu.Accounts.Add.AlreadyAdded" xml:space="preserve">
+    <value>Этот аккаунт уже добавлен!</value>
+  </data>
+  <data name="Menu.Accounts.Add.Confirm" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="Menu.Accounts.Add.CookiePlaceholder" xml:space="preserve">
+    <value>Вставьте куки .ROBLOSECURITY сюда...</value>
+  </data>
+  <data name="Menu.Accounts.Add.Description" xml:space="preserve">
+    <value>Введите куки .ROBLOSECURITY для авторизации аккаунта:</value>
+  </data>
+  <data name="Menu.Accounts.Add.EmptyCookie" xml:space="preserve">
+    <value>Куки не может быть пустым!</value>
+  </data>
+  <data name="Menu.Accounts.Add.Heading" xml:space="preserve">
+    <value>Добавить аккаунт Roblox</value>
+  </data>
+  <data name="Menu.Accounts.Add.InvalidCookie" xml:space="preserve">
+    <value>Не удалось авторизовать куки. Проверьте правильность ввода!</value>
+  </data>
+  <data name="Menu.Accounts.Add.Title" xml:space="preserve">
+    <value>Добавить аккаунт</value>
+  </data>
+  <data name="Menu.Accounts.DeleteConfirm" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить аккаунт {0}?</value>
+  </data>
+  <data name="Menu.Accounts.DeleteConfirm.Title" xml:space="preserve">
+    <value>Подтверждение удаления</value>
+  </data>
+  <data name="Menu.Accounts.RefreshCookiePlaceholder" xml:space="preserve">
+    <value>Вставьте новые куки для обновления сессии...</value>
+  </data>
+  <data name="Menu.Accounts.Status.Running" xml:space="preserve">
+    <value>Активен</value>
+  </data>
+  <data name="Menu.Accounts.Status.Stopped" xml:space="preserve">
+    <value>Не запущен</value>
+  </data>
+  <data name="Menu.ActiveClients.NoClients" xml:space="preserve">
+    <value>Нет запущенных окон Roblox</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Presets.Applied" xml:space="preserve">
+    <value>Конфигурация «{0}» успешно применена!</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Presets.Balanced" xml:space="preserve">
+    <value>Balanced (Баланс)</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Presets.Confirm" xml:space="preserve">
+    <value>Применить конфигурацию «{0}»?
+Это обновит соответствующие значения FastFlag.</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Presets.Heading" xml:space="preserve">
+    <value>Быстрые конфигурации флагов</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Presets.Potato" xml:space="preserve">
+    <value>Potato PC (Макс FPS)</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Presets.Reset" xml:space="preserve">
+    <value>Сбросить все флаги</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Presets.ResetConfirm" xml:space="preserve">
+    <value>Сбросить все пользовательские FastFlags к стандартным настройкам?</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Presets.ResetDone" xml:space="preserve">
+    <value>Все кастомные флаги сброшены!</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Presets.Ultra" xml:space="preserve">
+    <value>Ultra Graphics (Ультра)</value>
+  </data>
 </root>

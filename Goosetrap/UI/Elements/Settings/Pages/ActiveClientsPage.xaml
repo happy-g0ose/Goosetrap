@@ -30,7 +30,7 @@
                 Visibility="{Binding Clients.Count, Converter={StaticResource CollectionEmptyToVisibilityConverter}}">
             <StackPanel HorizontalAlignment="Center">
                 <ui:SymbolIcon Symbol="Info24" FontSize="48" Foreground="{DynamicResource TextFillColorTertiaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,12" />
-                <TextBlock Text="Нет запущенных окон Roblox" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" />
+                <TextBlock Text="{x:Static resources:Strings.Menu_ActiveClients_NoClients}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" />
             </StackPanel>
         </Border>
 

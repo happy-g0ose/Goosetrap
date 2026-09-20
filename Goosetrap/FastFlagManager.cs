@@ -190,20 +190,15 @@ namespace Goosetrap
             if (GetPreset("Rendering.ManualFullscreen") != "False")
                 SetPreset("Rendering.ManualFullscreen", "False");
                 
-            if (GetValue("DFIntTaskSchedulerTargetFps") == null)
-                SetValue("DFIntTaskSchedulerTargetFps", "9999");
-            if (GetValue("FFlagGameRealTimeD3D11DisableVsync") == null)
-                SetValue("FFlagGameRealTimeD3D11DisableVsync", "True");
+            // NOTE: the FPS flags that used to be forced here (DFIntTaskSchedulerTargetFps, FFlagGameRealTimeD3D11DisableVsync)
+            // are not on Roblox's Fast Flag Allowlist anymore, so the client ignores them - see FFlagAllowlist.
+            // The frame rate cap is applied through Roblox's own FramerateCap setting instead ("Engine Settings" -> "FPS Cap").
                 
-            // Shaders / Graphics enhancements
-            if (GetValue("DFFlagTextureQualityOverrideEnabled") == null)
-                SetValue("DFFlagTextureQualityOverrideEnabled", "True");
-            if (GetValue("DFIntTextureQualityOverride") == null)
-                SetValue("DFIntTextureQualityOverride", "3");
-            if (GetValue("FIntDebugForceMSAASamples") == null)
-                SetValue("FIntDebugForceMSAASamples", "4");
-            if (GetValue("FFlagDebugForceFutureIsBrightPhase3") == null)
-                SetValue("FFlagDebugForceFutureIsBrightPhase3", "True");
+            // NOTE: we no longer force texture quality and MSAA on for everyone. Those flags ARE on Roblox's
+            // Fast Flag Allowlist, so the client really applies them - and 4x MSAA plus the highest texture
+            // quality (DFIntTextureQualityOverride 3 = "Level 3 (Highest)") made the client slower out of the
+            // box, which is the opposite of what Goosetrap is for. They are still one click away, either
+            // through the "Ultra Graphics" preset or by picking a texture quality in "Engine Settings".
         }
     }
 }

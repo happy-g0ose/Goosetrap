@@ -49,7 +49,7 @@ If you have a low-end computer or need maximum performance in demanding games (l
 In the same **"Engine Settings"** tab, we recommend setting:
 - **Anti-Aliasing (MSAA):** Set to `Disabled` (Potato PC mode turns this off automatically).
 - **Rendering Mode:** Choose `Direct3D 11` (most stable API for Windows) or `Vulkan` (recommended for AMD graphics cards).
-- **Texture Quality:** If Potato PC mode is disabled, select `Level 1 (Lowest)` for optimized texture resolution.
+- **Texture Quality:** If Potato PC mode is disabled, select `Level 0 (Lowest)` for optimized texture resolution.
 
 ---
 

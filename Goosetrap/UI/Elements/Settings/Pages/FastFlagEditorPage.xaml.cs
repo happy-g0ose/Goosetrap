@@ -284,6 +284,9 @@ namespace Goosetrap.UI.Elements.Settings.Pages
 
                     entry.Name = newName;
 
+                    // keep the allowlist status in sync with the renamed flag
+                    entry.Allowlisted = FastFlagManager.IsAllowlisted(newName);
+
                     break;
 
                 case "Value":
@@ -362,7 +365,7 @@ namespace Goosetrap.UI.Elements.Settings.Pages
         private void ApplyPresetDictionary(Dictionary<string, object> flags, string presetName)
         {
             var result = Frontend.ShowMessageBox(
-                $"Применить конфигурацию «{presetName}»?\nЭто обновит соответствующие значения FastFlag.",
+                String.Format(Strings.Menu_FastFlagEditor_Presets_Confirm, presetName),
                 MessageBoxImage.Question,
                 MessageBoxButton.YesNo
             );
@@ -376,7 +379,7 @@ namespace Goosetrap.UI.Elements.Settings.Pages
             }
 
             ClearSearch();
-            Frontend.ShowMessageBox($"Конфигурация «{presetName}» успешно применена!", MessageBoxImage.Information);
+            Frontend.ShowMessageBox(String.Format(Strings.Menu_FastFlagEditor_Presets_Applied, presetName), MessageBoxImage.Information);
         }
 
         private void PresetPotato_Click(object sender, RoutedEventArgs e)
@@ -411,7 +414,7 @@ namespace Goosetrap.UI.Elements.Settings.Pages
                 { "FFlagDebugForceFutureIsBrightPhase3", "False" }
             };
 
-            ApplyPresetDictionary(potatoFlags, "Potato PC (Макс FPS)");
+            ApplyPresetDictionary(potatoFlags, Strings.Menu_FastFlagEditor_Presets_Potato);
         }
 
         private void PresetUltra_Click(object sender, RoutedEventArgs e)
@@ -436,7 +439,7 @@ namespace Goosetrap.UI.Elements.Settings.Pages
                 { "FFlagDebugForceFutureIsBrightPhase3", "True" }
             };
 
-            ApplyPresetDictionary(ultraFlags, "Ultra Graphics");
+            ApplyPresetDictionary(ultraFlags, Strings.Menu_FastFlagEditor_Presets_Ultra);
         }
 
         private void PresetBalanced_Click(object sender, RoutedEventArgs e)
@@ -458,13 +461,13 @@ namespace Goosetrap.UI.Elements.Settings.Pages
                 { "FFlagDisableInGameMenuBlur", "True" }
             };
 
-            ApplyPresetDictionary(balancedFlags, "Balanced");
+            ApplyPresetDictionary(balancedFlags, Strings.Menu_FastFlagEditor_Presets_Balanced);
         }
 
         private void PresetReset_Click(object sender, RoutedEventArgs e)
         {
             var result = Frontend.ShowMessageBox(
-                "Сбросить все пользовательские FastFlags к стандартным настройкам?",
+                Strings.Menu_FastFlagEditor_Presets_ResetConfirm,
                 MessageBoxImage.Warning,
                 MessageBoxButton.YesNo
             );
@@ -479,7 +482,7 @@ namespace Goosetrap.UI.Elements.Settings.Pages
             }
 
             ClearSearch();
-            Frontend.ShowMessageBox("Все кастомные флаги сброшены!", MessageBoxImage.Information);
+            Frontend.ShowMessageBox(Strings.Menu_FastFlagEditor_Presets_ResetDone, MessageBoxImage.Information);
         }
     }
 }

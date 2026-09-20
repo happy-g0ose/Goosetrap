@@ -19,9 +19,9 @@ namespace Goosetrap.UI.ViewModels.Settings
 {
     public class RobloxClientInfo : NotifyPropertyChangedViewModel
     {
-        private string _gameName = "Загрузка...";
-        private string _username = "Неизвестно";
-        private string _displayName = "Неизвестно";
+        private string _gameName = Strings.Common_Loading;
+        private string _username = Strings.Menu_ActiveClients_Unknown;
+        private string _displayName = Strings.Menu_ActiveClients_Unknown;
         private string _uptime = "00:00:00";
         private string _ramUsage = "0 MB";
 
@@ -33,7 +33,7 @@ namespace Goosetrap.UI.ViewModels.Settings
         public string Arguments { get; set; } = "";
         public long PlaceId { get; set; }
         public long UniverseId { get; set; }
-        public string LogFilePath { get; set; } = "";
+        public string? LogFilePath { get; set; } = "";
 
         public string Username
         {
@@ -143,7 +143,7 @@ namespace Goosetrap.UI.ViewModels.Settings
                 }
 
                 // Get all log files currently mapped to existing clients
-                var usedLogs = Clients.Where(c => !string.IsNullOrEmpty(c.LogFilePath)).Select(c => c.LogFilePath).ToHashSet(StringComparer.OrdinalIgnoreCase);
+                var usedLogs = Clients.Where(c => !string.IsNullOrEmpty(c.LogFilePath)).Select(c => c.LogFilePath!).ToHashSet(StringComparer.OrdinalIgnoreCase);
  
                 // Update Uptime and RAM for remaining active clients
                 foreach (var client in Clients)
@@ -190,7 +190,7 @@ namespace Goosetrap.UI.ViewModels.Settings
                         if (!string.IsNullOrEmpty(logData.logFilePath) && string.IsNullOrEmpty(existingClient.LogFilePath)) 
                         {
                             existingClient.LogFilePath = logData.logFilePath;
-                            usedLogs.Add(logData.logFilePath);
+                            usedLogs.Add(logData.logFilePath!);
                         }
                         continue;
                     }
@@ -228,8 +228,8 @@ namespace Goosetrap.UI.ViewModels.Settings
                     }
 
                     // Проверяем реестр аккаунтов по тикету из командной строки
-                    string username = "Неизвестно";
-                    string displayName = "Неизвестно";
+                    string username = Strings.Menu_ActiveClients_Unknown;
+                    string displayName = Strings.Menu_ActiveClients_Unknown;
                     long placeId = 0;
                     long universeId = 0;
                     bool foundByTicket = false;
@@ -251,7 +251,7 @@ namespace Goosetrap.UI.ViewModels.Settings
                     }
 
                     // Фолбэк: парсим лог-файл (для запусков через сайт)
-                    string logFilePath = "";
+                    string? logFilePath = "";
                     if (!foundByTicket)
                     {
                         (username, displayName, placeId, universeId, logFilePath) = ParseLogFile(process, usedLogs);
@@ -414,7 +414,7 @@ namespace Goosetrap.UI.ViewModels.Settings
                         var root2 = doc2.RootElement;
                         if (root2.TryGetProperty("data", out var dataProp) && dataProp.ValueKind == JsonValueKind.Array && dataProp.GetArrayLength() > 0)
                         {
-                            string name = dataProp[0].GetProperty("name").GetString();
+                            string? name = dataProp[0].GetProperty("name").GetString();
                             if (!string.IsNullOrEmpty(name))
                             {
                                 GameNameCache[client.PlaceId] = name;
@@ -466,7 +466,7 @@ namespace Goosetrap.UI.ViewModels.Settings
             return "";
         }
 
-        private static string FindLogFileForProcess(Process process, HashSet<string> usedLogs)
+        private static string? FindLogFileForProcess(Process process, HashSet<string> usedLogs)
         {
             string logsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Roblox", "logs");
             if (!Directory.Exists(logsDir)) return null;
@@ -494,7 +494,7 @@ namespace Goosetrap.UI.ViewModels.Settings
             return null;
         }
 
-        private static (string username, string displayName, long placeId, long universeId, string logFilePath) ParseLogFile(Process process, HashSet<string> usedLogs, string? preExistingLogPath = null)
+        private static (string username, string displayName, long placeId, long universeId, string? logFilePath) ParseLogFile(Process process, HashSet<string> usedLogs, string? preExistingLogPath = null)
         {
             string username = Strings.Menu_ActiveClients_Unknown;
             string displayName = Strings.Menu_ActiveClients_Unknown;
@@ -514,7 +514,7 @@ namespace Goosetrap.UI.ViewModels.Settings
                     using var fs = new FileStream(logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                     using var sr = new StreamReader(fs);
                     
-                    string line;
+                    string? line;
                     long parsedUserId = 0;
                     while ((line = sr.ReadLine()) != null)
                     {

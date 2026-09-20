@@ -88,7 +88,7 @@
                 <controls:OptionControl 
             Header="{x:Static resources:Strings.Menu_FastFlags_Presets_FixDisplayScaling_Title}" 
             Description="{x:Static resources:Strings.Menu_FastFlags_Presets_FixDisplayScaling_Description}" 
-            HelpLink="https://github.com/Goosetraplabs/Goosetrap/wiki/A-guide-to-FastFlags#dpi-scaling-fixes">
+            HelpLink="https://github.com/happy-g0ose/Goosetrap/wiki/A-guide-to-FastFlags#dpi-scaling-fixes">
                     <ui:ToggleSwitch IsChecked="{Binding FixDisplayScaling, Mode=TwoWay}" />
                 </controls:OptionControl>
 
