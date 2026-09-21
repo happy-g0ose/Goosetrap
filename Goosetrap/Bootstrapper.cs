@@ -798,10 +798,28 @@ namespace Goosetrap
 
                     App.Logger.WriteLine(LOG_IDENT, $"Started Roblox (PID {_appPid}), waiting for log file");
 
+                    // The log file has to be identified while we still hold the launch semaphore:
+                    // for account launches we must not let the next bootstrapper overwrite the shared
+                    // RobloxCookies.dat before this client had a chance to read it.
+                    logCreatedEvent.WaitOne(TimeSpan.FromSeconds(15));
+
                     if (App.LaunchSettings.AccountUserId != 0)
                     {
-                        App.Logger.WriteLine(LOG_IDENT, "Waiting 3 seconds for Roblox to read the cookie...");
-                        Thread.Sleep(3000);
+                        // Every account writes its cookie into the same RobloxCookies.dat, so launching
+                        // several accounts back to back means the last written cookie wins for every
+                        // client that hasn't authenticated yet. Wait until THIS client has actually
+                        // authenticated (its log contains rbxuid=) before allowing the next launch.
+                        if (!String.IsNullOrEmpty(logFileName))
+                        {
+                            App.Logger.WriteLine(LOG_IDENT, "Waiting for this client to authenticate before releasing the launch semaphore...");
+                            WaitForClientAuthentication(Path.Combine(rbxLogDir, logFileName), TimeSpan.FromSeconds(60));
+                        }
+                        else
+                        {
+                            // log file never showed up - fall back to the old fixed delay
+                            App.Logger.WriteLine(LOG_IDENT, "No log file appeared, falling back to a fixed 5 second wait");
+                            Thread.Sleep(5000);
+                        }
                     }
                 }
                 finally
@@ -812,8 +830,6 @@ namespace Goosetrap
                         App.Logger.WriteLine(LOG_IDENT, "Released Roblox launch semaphore");
                     }
                 }
-
-                logCreatedEvent.WaitOne(TimeSpan.FromSeconds(15));
 
                 if (String.IsNullOrEmpty(logFileName))
                 {
@@ -891,6 +907,67 @@ namespace Goosetrap
 
                 // allow for window to show, since the log is created pretty far beforehand
                 Thread.Sleep(1000);
+        }
+
+        /// <summary>
+        /// Waits until the freshly started Roblox client has authenticated itself.
+        ///
+        /// Every account writes its cookie into the same RobloxCookies.dat, so when several accounts
+        /// are launched back to back the cookie that was written last wins for every client that has
+        /// not authenticated yet. The client writes "rbxuid=" into its log as soon as it is logged in,
+        /// which is the reliable signal that this client has read its cookie and we can safely let the
+        /// next bootstrapper overwrite the shared cookie file.
+        /// </summary>
+        private static void WaitForClientAuthentication(string logPath, TimeSpan timeout)
+        {
+            const string LOG_IDENT = "Bootstrapper::WaitForClientAuthentication";
+
+            var stopwatch = Stopwatch.StartNew();
+            long offset = 0;
+
+            try
+            {
+                while (stopwatch.Elapsed < timeout)
+                {
+                    if (!File.Exists(logPath))
+                    {
+                        Thread.Sleep(250);
+                        continue;
+                    }
+
+                    try
+                    {
+                        using var fs = new FileStream(logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+                        if (fs.Length > offset)
+                        {
+                            fs.Seek(offset, SeekOrigin.Begin);
+
+                            using var reader = new StreamReader(fs);
+                            string chunk = reader.ReadToEnd();
+                            offset = fs.Position;
+
+                            if (chunk.Contains("rbxuid=", StringComparison.OrdinalIgnoreCase))
+                            {
+                                App.Logger.WriteLine(LOG_IDENT, $"Client authenticated after {stopwatch.ElapsedMilliseconds} ms");
+                                return;
+                            }
+                        }
+                    }
+                    catch (IOException)
+                    {
+                        // the client keeps the log locked for writing, just retry
+                    }
+
+                    Thread.Sleep(500);
+                }
+
+                App.Logger.WriteLine(LOG_IDENT, "Timed out waiting for the client to authenticate");
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteException(LOG_IDENT, ex);
+            }
         }
 
         private bool ShouldRunAsAdmin()
