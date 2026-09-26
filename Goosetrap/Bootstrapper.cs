@@ -63,7 +63,23 @@ namespace Goosetrap
         private long _totalDownloadedBytes = 0;
         private bool _packageExtractionSuccess = true;
 
-        private bool _mustUpgrade => App.LaunchSettings.ForceFlag.Active || App.State.Prop.ForceReinstall || String.IsNullOrEmpty(AppData.State.VersionGuid) || !File.Exists(AppData.ExecutablePath);
+        private bool _mustUpgrade
+        {
+            get
+            {
+                if (App.LaunchSettings.ForceFlag.Active || App.State.Prop.ForceReinstall || String.IsNullOrEmpty(AppData.State.VersionGuid))
+                    return true;
+
+                if (!File.Exists(AppData.ExecutablePath))
+                    return true;
+
+                // RobloxPlayerBeta.dll is required alongside RobloxPlayerBeta.exe since Roblox moved core logic into it
+                if (!IsStudioLaunch && !File.Exists(Path.Combine(AppData.Directory, "RobloxPlayerBeta.dll")))
+                    return true;
+
+                return false;
+            }
+        }
         private bool _noConnection = false;
 
         private AsyncMutex? _mutex;
@@ -665,7 +681,10 @@ namespace Goosetrap
                     }
                 }
 
-                if (String.IsNullOrEmpty(ResolvedName))
+                // If RobloxPlayerBeta.dll is missing for player, the installation is incomplete and must be repaired
+                bool missingPlayerDll = _launchMode == LaunchMode.Player && !File.Exists(Path.Combine((string)AppData.Directory, "RobloxPlayerBeta.dll"));
+
+                if (String.IsNullOrEmpty(ResolvedName) || missingPlayerDll)
                 {
                     await UpgradeRoblox();
                 }
