@@ -1678,4 +1678,28 @@ Goosetrap был установлен по адресу "{1}".</value>
   <data name="Menu.Accounts.UnselectAll" xml:space="preserve">
     <value>Снять выбор</value>
   </data>
+  <data name="Menu.Accounts.AutoRestart.Attempts.Description" xml:space="preserve">
+    <value>Сколько раз аккаунт может перезайти в пределах окна ниже, прежде чем Goosetrap сдастся.</value>
+  </data>
+  <data name="Menu.Accounts.AutoRestart.Attempts.Title" xml:space="preserve">
+    <value>Максимум перезаходов</value>
+  </data>
+  <data name="Menu.Accounts.AutoRestart.Delay.Description" xml:space="preserve">
+    <value>Сколько ждать перед повторным заходом, чтобы Roblox успел освободить старую сессию.</value>
+  </data>
+  <data name="Menu.Accounts.AutoRestart.Delay.Title" xml:space="preserve">
+    <value>Пауза перед перезаходом (секунды)</value>
+  </data>
+  <data name="Menu.Accounts.AutoRestart.OnlyIfJoined.Description" xml:space="preserve">
+    <value>Пропускать клиентов, которые закрылись, не дойдя до плейса — чтобы сломанный запуск не зациклился.</value>
+  </data>
+  <data name="Menu.Accounts.AutoRestart.OnlyIfJoined.Title" xml:space="preserve">
+    <value>Перезаходить только если клиент был в игре</value>
+  </data>
+  <data name="Menu.Accounts.AutoRestart.Window.Description" xml:space="preserve">
+    <value>Счётчик перезаходов сбрасывается, когда проходит столько времени.</value>
+  </data>
+  <data name="Menu.Accounts.AutoRestart.Window.Title" xml:space="preserve">
+    <value>Окно времени (минуты)</value>
+  </data>
 </root>

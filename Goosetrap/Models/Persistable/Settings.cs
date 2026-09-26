@@ -47,5 +47,26 @@ namespace Goosetrap.Models.Persistable
 
         // account manager
         public bool AutoRestartCrashedClients { get; set; } = false;
+
+        /// <summary>
+        /// How long to wait before signing a crashed account back in, in seconds.
+        /// </summary>
+        public int AutoRestartDelaySeconds { get; set; } = 5;
+
+        /// <summary>
+        /// How many times an account may be signed back in inside <see cref="AutoRestartWindowMinutes"/>.
+        /// </summary>
+        public int AutoRestartMaxAttempts { get; set; } = 3;
+
+        /// <summary>
+        /// The window the re-join counter uses, in minutes.
+        /// </summary>
+        public int AutoRestartWindowMinutes { get; set; } = 15;
+
+        /// <summary>
+        /// Only sign an account back in when its client actually made it into a game, so a client that
+        /// dies during startup does not loop.
+        /// </summary>
+        public bool AutoRestartOnlyIfJoined { get; set; } = true;
     }
 }

@@ -5219,5 +5219,53 @@ namespace Goosetrap.Resources {
                 return ResourceManager.GetString("Menu.Accounts.UnselectAll", resourceCulture);
             }
         }
+        
+        public static string Menu_Accounts_AutoRestart_Attempts_Description {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.AutoRestart.Attempts.Description", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_AutoRestart_Attempts_Title {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.AutoRestart.Attempts.Title", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_AutoRestart_Delay_Description {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.AutoRestart.Delay.Description", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_AutoRestart_Delay_Title {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.AutoRestart.Delay.Title", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_AutoRestart_OnlyIfJoined_Description {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.AutoRestart.OnlyIfJoined.Description", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_AutoRestart_OnlyIfJoined_Title {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.AutoRestart.OnlyIfJoined.Title", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_AutoRestart_Window_Description {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.AutoRestart.Window.Description", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_AutoRestart_Window_Title {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.AutoRestart.Window.Title", resourceCulture);
+            }
+        }
     }
 }

@@ -31,6 +31,33 @@
             <ui:ToggleSwitch IsChecked="{Binding AutoRestartCrashedClients, Mode=TwoWay}" />
         </controls:OptionControl>
 
+        <controls:OptionControl
+            Header="{x:Static resources:Strings.Menu_Accounts_AutoRestart_Delay_Title}"
+            Description="{x:Static resources:Strings.Menu_Accounts_AutoRestart_Delay_Description}">
+            <ui:NumberBox Width="140" Min="0" Max="300" Step="1" IntegersOnly="True"
+                          Value="{Binding AutoRestartDelaySeconds, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <controls:OptionControl
+            Header="{x:Static resources:Strings.Menu_Accounts_AutoRestart_Attempts_Title}"
+            Description="{x:Static resources:Strings.Menu_Accounts_AutoRestart_Attempts_Description}">
+            <ui:NumberBox Width="140" Min="1" Max="50" Step="1" IntegersOnly="True"
+                          Value="{Binding AutoRestartMaxAttempts, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <controls:OptionControl
+            Header="{x:Static resources:Strings.Menu_Accounts_AutoRestart_Window_Title}"
+            Description="{x:Static resources:Strings.Menu_Accounts_AutoRestart_Window_Description}">
+            <ui:NumberBox Width="140" Min="1" Max="720" Step="1" IntegersOnly="True"
+                          Value="{Binding AutoRestartWindowMinutes, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <controls:OptionControl
+            Header="{x:Static resources:Strings.Menu_Accounts_AutoRestart_OnlyIfJoined_Title}"
+            Description="{x:Static resources:Strings.Menu_Accounts_AutoRestart_OnlyIfJoined_Description}">
+            <ui:ToggleSwitch IsChecked="{Binding AutoRestartOnlyIfJoined, Mode=TwoWay}" />
+        </controls:OptionControl>
+
         <!-- Join a game / private server with the selected accounts -->
         <Border BorderThickness="1" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" CornerRadius="8" Padding="16" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" Margin="0,0,0,16">
             <StackPanel>

@@ -2012,4 +2012,28 @@ This will update the matching FastFlag values.</value>
   <data name="Menu.Accounts.UnselectAll" xml:space="preserve">
     <value>Clear selection</value>
   </data>
+  <data name="Menu.Accounts.AutoRestart.Attempts.Description" xml:space="preserve">
+    <value>How many times an account may be signed back in inside the time window below before Goosetrap gives up.</value>
+  </data>
+  <data name="Menu.Accounts.AutoRestart.Attempts.Title" xml:space="preserve">
+    <value>Maximum re-joins</value>
+  </data>
+  <data name="Menu.Accounts.AutoRestart.Delay.Description" xml:space="preserve">
+    <value>How long to wait before signing the account back in, so Roblox has time to release the old session.</value>
+  </data>
+  <data name="Menu.Accounts.AutoRestart.Delay.Title" xml:space="preserve">
+    <value>Pause before re-joining (seconds)</value>
+  </data>
+  <data name="Menu.Accounts.AutoRestart.OnlyIfJoined.Description" xml:space="preserve">
+    <value>Skip clients that closed before they reached a place, so a broken launch does not loop.</value>
+  </data>
+  <data name="Menu.Accounts.AutoRestart.OnlyIfJoined.Title" xml:space="preserve">
+    <value>Only re-join clients that were in a game</value>
+  </data>
+  <data name="Menu.Accounts.AutoRestart.Window.Description" xml:space="preserve">
+    <value>The re-join counter resets once this much time has passed.</value>
+  </data>
+  <data name="Menu.Accounts.AutoRestart.Window.Title" xml:space="preserve">
+    <value>Time window (minutes)</value>
+  </data>
 </root>

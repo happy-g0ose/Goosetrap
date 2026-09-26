@@ -154,6 +154,80 @@ namespace Goosetrap.UI.ViewModels.Settings
             }
         }
 
+        /// <summary>
+        /// How long to wait before signing a crashed account back in, in seconds.
+        /// </summary>
+        public int AutoRestartDelaySeconds
+        {
+            get => App.Settings.Prop.AutoRestartDelaySeconds;
+            set
+            {
+                value = Math.Clamp(value, 0, 300);
+
+                if (App.Settings.Prop.AutoRestartDelaySeconds == value)
+                    return;
+
+                App.Settings.Prop.AutoRestartDelaySeconds = value;
+                App.Settings.Save();
+                OnPropertyChanged(nameof(AutoRestartDelaySeconds));
+            }
+        }
+
+        /// <summary>
+        /// How many times an account may be signed back in inside the time window.
+        /// </summary>
+        public int AutoRestartMaxAttempts
+        {
+            get => App.Settings.Prop.AutoRestartMaxAttempts;
+            set
+            {
+                value = Math.Clamp(value, 1, 50);
+
+                if (App.Settings.Prop.AutoRestartMaxAttempts == value)
+                    return;
+
+                App.Settings.Prop.AutoRestartMaxAttempts = value;
+                App.Settings.Save();
+                OnPropertyChanged(nameof(AutoRestartMaxAttempts));
+            }
+        }
+
+        /// <summary>
+        /// The window the re-join counter uses, in minutes.
+        /// </summary>
+        public int AutoRestartWindowMinutes
+        {
+            get => App.Settings.Prop.AutoRestartWindowMinutes;
+            set
+            {
+                value = Math.Clamp(value, 1, 720);
+
+                if (App.Settings.Prop.AutoRestartWindowMinutes == value)
+                    return;
+
+                App.Settings.Prop.AutoRestartWindowMinutes = value;
+                App.Settings.Save();
+                OnPropertyChanged(nameof(AutoRestartWindowMinutes));
+            }
+        }
+
+        /// <summary>
+        /// Only sign an account back in when its client actually reached a game.
+        /// </summary>
+        public bool AutoRestartOnlyIfJoined
+        {
+            get => App.Settings.Prop.AutoRestartOnlyIfJoined;
+            set
+            {
+                if (App.Settings.Prop.AutoRestartOnlyIfJoined == value)
+                    return;
+
+                App.Settings.Prop.AutoRestartOnlyIfJoined = value;
+                App.Settings.Save();
+                OnPropertyChanged(nameof(AutoRestartOnlyIfJoined));
+            }
+        }
+
         public ICommand SelectAllCommand => new RelayCommand(() => SetSelection(true));
 
         public ICommand UnselectAllCommand => new RelayCommand(() => SetSelection(false));

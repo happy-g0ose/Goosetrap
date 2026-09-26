@@ -45,6 +45,12 @@ namespace Goosetrap.UI.ViewModels.Settings
         /// </summary>
         public bool ClosedByUser { get; set; }
 
+        /// <summary>
+        /// How much of <see cref="LogFilePath"/> was already parsed, so a refresh only has to look at
+        /// the lines that were appended since the last one.
+        /// </summary>
+        public long LogProcessedBytes { get; set; }
+
         public string Username
         {
             get => _username;
@@ -110,10 +116,21 @@ namespace Goosetrap.UI.ViewModels.Settings
         private readonly DispatcherTimer _timer;
         private static readonly Dictionary<long, string> GameNameCache = new();
 
-        // crash watch: how often an account was restarted inside the current window
+        // crash watch: how often an account was restarted inside the current window, the delay,
+        // attempt limit and window length themselves come from the settings
         private static readonly Dictionary<long, (int Attempts, DateTime WindowStart)> RestartHistory = new();
-        private static readonly TimeSpan RestartWindow = TimeSpan.FromMinutes(15);
-        private const int MaxRestartsPerWindow = 3;
+
+        // log scanning: the regexes are compiled once, and only the freshly appended part of a log is
+        // read on every refresh - a running client writes several megabytes of log per session and
+        // re-reading those in full for every client every tick is what made the page expensive
+        private const int LogOverlapBytes = 4096;
+
+        private static readonly Regex PlaceIdLogRegex = new(@"placeid:(?<placeId>\d+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex UniverseIdLogRegex = new(@"universeid:(?<universeId>\d+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex RbxUidLogRegex = new(@"rbxuid=(?<userId>\d+)", RegexOptions.Compiled);
+        private static readonly Regex TicketLogRegex = new(
+            @"ticket=\{""UserId""%3a(?<userId>\d+)%2c""UserName""%3a""(?<username>[^""]+)""%2c""DisplayName""%3a""(?<displayName>[^""]+)""",
+            RegexOptions.Compiled);
 
         public ObservableCollection<RobloxClientInfo> Clients { get; } = new();
 
@@ -187,33 +204,9 @@ namespace Goosetrap.UI.ViewModels.Settings
                     var existingClient = Clients.FirstOrDefault(c => c.Pid == process.Id);
                     if (existingClient != null)
                     {
-                        // Парсим лог на каждом тике, чтобы отслеживать переходы (телепорты) между плейсами
-                        var logData = ParseLogFile(process, usedLogs, existingClient.LogFilePath);
-                        
-                        // Если PlaceId изменился или изначально был 0
-                        if (logData.placeId != 0 && logData.placeId != existingClient.PlaceId)
-                        {
-                            existingClient.PlaceId = logData.placeId;
-                            existingClient.UniverseId = logData.universeId;
-                            _ = FetchGameNameAsync(existingClient);
-                        }
-                        
-                        // Обновляем никнейм если он появился в логе и не был установлен
-                        if (existingClient.Username == Strings.Menu_ActiveClients_Unknown && logData.username != Strings.Menu_ActiveClients_Unknown)
-                        {
-                            existingClient.Username = logData.username;
-                            existingClient.DisplayName = logData.displayName;
-                        }
-
-                        // remember which account this client belongs to, so the crash watcher can restart it
-                        if (existingClient.AccountUserId == 0 && logData.userId != 0)
-                            existingClient.AccountUserId = logData.userId;
-
-                        if (!string.IsNullOrEmpty(logData.logFilePath) && string.IsNullOrEmpty(existingClient.LogFilePath)) 
-                        {
-                            existingClient.LogFilePath = logData.logFilePath;
-                            usedLogs.Add(logData.logFilePath!);
-                        }
+                        // only the lines appended since the last tick are parsed, which keeps place
+                        // changes (teleports) tracked without re-reading a whole multi-megabyte log
+                        UpdateClientFromLogIncremental(existingClient, usedLogs);
                         continue;
                     }
 
@@ -328,6 +321,19 @@ namespace Goosetrap.UI.ViewModels.Settings
                     clientInfo.KillCommand = new RelayCommand(() => KillClient(clientInfo));
                     clientInfo.ReconnectCommand = new RelayCommand(() => ReconnectClient(clientInfo));
 
+                    // the log was already parsed in full above, so remember how far we got
+                    if (!String.IsNullOrEmpty(clientInfo.LogFilePath) && File.Exists(clientInfo.LogFilePath))
+                    {
+                        try
+                        {
+                            clientInfo.LogProcessedBytes = new FileInfo(clientInfo.LogFilePath).Length;
+                        }
+                        catch
+                        {
+                            // if this fails the next refresh just parses the file once more
+                        }
+                    }
+
                     Clients.Add(clientInfo);
 
                     // Fetch game name asynchronously
@@ -344,6 +350,99 @@ namespace Goosetrap.UI.ViewModels.Settings
             catch (Exception ex)
             {
                 App.Logger.WriteLine(LOG_IDENT, $"Error refreshing Roblox processes: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Parses only the part of a client's log that was appended since the last refresh and updates
+        /// the client with whatever was found there: the place it is in, the account behind it and the
+        /// user name once authentication went through.
+        /// </summary>
+        private void UpdateClientFromLogIncremental(RobloxClientInfo client, HashSet<string> usedLogs)
+        {
+            const string LOG_IDENT = "ActiveClientsViewModel::UpdateClientFromLog";
+
+            try
+            {
+                if (String.IsNullOrEmpty(client.LogFilePath))
+                {
+                    string? found = FindLogFileForProcess(client.Process, usedLogs);
+
+                    if (String.IsNullOrEmpty(found))
+                        return;
+
+                    client.LogFilePath = found;
+                    client.LogProcessedBytes = 0;
+                    usedLogs.Add(found);
+                }
+
+                using var fs = new FileStream(client.LogFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+                if (client.LogProcessedBytes > 0 && fs.Length <= client.LogProcessedBytes)
+                    return;
+
+                // read a small overlap as well, so a line that was cut in half by the previous read
+                // is still matched completely
+                long windowStart = Math.Max(0, client.LogProcessedBytes - LogOverlapBytes);
+                fs.Seek(windowStart, SeekOrigin.Begin);
+
+                using var reader = new StreamReader(fs);
+                string chunk = reader.ReadToEnd();
+                client.LogProcessedBytes = fs.Length;
+
+                bool placeChanged = false;
+
+                foreach (string line in chunk.Split('\n'))
+                {
+                    var placeMatch = PlaceIdLogRegex.Match(line);
+                    if (placeMatch.Success && long.TryParse(placeMatch.Groups["placeId"].Value, out long placeId))
+                    {
+                        if (placeId != 0 && placeId != client.PlaceId)
+                        {
+                            client.PlaceId = placeId;
+                            placeChanged = true;
+                        }
+                    }
+
+                    var universeMatch = UniverseIdLogRegex.Match(line);
+                    if (universeMatch.Success && long.TryParse(universeMatch.Groups["universeId"].Value, out long universeId))
+                        client.UniverseId = universeId;
+
+                    if (client.AccountUserId == 0)
+                    {
+                        var uidMatch = RbxUidLogRegex.Match(line);
+                        if (uidMatch.Success && long.TryParse(uidMatch.Groups["userId"].Value, out long userId))
+                            client.AccountUserId = userId;
+                    }
+
+                    var ticketMatch = TicketLogRegex.Match(line);
+                    if (ticketMatch.Success)
+                    {
+                        client.Username = Uri.UnescapeDataString(ticketMatch.Groups["username"].Value);
+                        client.DisplayName = Uri.UnescapeDataString(ticketMatch.Groups["displayName"].Value);
+
+                        if (client.AccountUserId == 0 && long.TryParse(ticketMatch.Groups["userId"].Value, out long ticketUserId))
+                            client.AccountUserId = ticketUserId;
+
+                        var savedAccount = App.Accounts.Prop.Accounts.FirstOrDefault(x => x.UserId == client.AccountUserId);
+                        if (savedAccount is not null)
+                        {
+                            client.Username = savedAccount.Username;
+                            client.DisplayName = savedAccount.DisplayName;
+                        }
+                    }
+                }
+
+                if (placeChanged)
+                    _ = FetchGameNameAsync(client);
+            }
+            catch (IOException)
+            {
+                // the client keeps its log open for writing, the next tick will pick it up
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteLine(LOG_IDENT, $"Failed to update PID {client.Pid} from its log: {ex.Message}");
             }
         }
 
@@ -428,15 +527,26 @@ namespace Goosetrap.UI.ViewModels.Settings
             if (!App.Settings.Prop.AutoRestartCrashedClients)
                 return;
 
+            // clients that died before they ever got into a game are most likely a broken launch,
+            // restarting them would just hammer Roblox
+            if (App.Settings.Prop.AutoRestartOnlyIfJoined && client.PlaceId == 0)
+            {
+                App.Logger.WriteLine(LOG_IDENT, $"PID {client.Pid} was never in a game, not restarting");
+                return;
+            }
+
+            var window = TimeSpan.FromMinutes(Math.Max(1, App.Settings.Prop.AutoRestartWindowMinutes));
+            int maxAttempts = Math.Max(1, App.Settings.Prop.AutoRestartMaxAttempts);
+
             lock (RestartHistory)
             {
                 if (RestartHistory.TryGetValue(client.AccountUserId, out var history))
                 {
-                    if (DateTime.UtcNow - history.WindowStart > RestartWindow)
+                    if (DateTime.UtcNow - history.WindowStart > window)
                         history = (0, DateTime.UtcNow);
-                    else if (history.Attempts >= MaxRestartsPerWindow)
+                    else if (history.Attempts >= maxAttempts)
                     {
-                        App.Logger.WriteLine(LOG_IDENT, $"Gave up restarting account {client.AccountUserId}, too many restarts");
+                        App.Logger.WriteLine(LOG_IDENT, $"Gave up restarting account {client.AccountUserId}, {history.Attempts} attempts inside {window.TotalMinutes:0} minutes");
                         return;
                     }
                 }
@@ -463,7 +573,7 @@ namespace Goosetrap.UI.ViewModels.Settings
             Task.Run(async () =>
             {
                 // let Roblox clean up before the next client takes the launch slot
-                await Task.Delay(5000);
+                await Task.Delay(TimeSpan.FromSeconds(Math.Max(0, App.Settings.Prop.AutoRestartDelaySeconds)));
 
                 bool started = await Goosetrap.Utility.AccountsHelper.LaunchAccountAsync(entry, target: target);
 
