@@ -68,5 +68,11 @@ namespace Goosetrap.Models.Persistable
         /// dies during startup does not loop.
         /// </summary>
         public bool AutoRestartOnlyIfJoined { get; set; } = true;
+
+        /// <summary>
+        /// Restart a client once it uses more than this much memory, in megabytes. 0 disables the check.
+        /// Roblox clients are known to grow to several gigabytes during long sessions.
+        /// </summary>
+        public int MaxClientRamMb { get; set; } = 0;
     }
 }

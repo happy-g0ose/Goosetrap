@@ -203,14 +203,29 @@ namespace Goosetrap.Utility
             if (entry is null)
                 return false;
 
-            if (target is null && !String.IsNullOrWhiteSpace(joinLink))
-                target = JoinUri.Parse(joinLink);
-
             string cookie = Decrypt(entry.EncryptedCookie);
             if (string.IsNullOrEmpty(cookie))
             {
                 App.Logger.WriteLine(LOG_IDENT, $"Could not decrypt the cookie of {entry.Username}");
                 return false;
+            }
+
+            if (target is null && !String.IsNullOrWhiteSpace(joinLink))
+            {
+                target = JoinUri.Parse(joinLink);
+
+                // the desktop app and the website hand out share links for private servers, those carry
+                // an opaque code instead of a place id and have to be exchanged for the join data
+                if (target is null && JoinUri.IsShareLink(joinLink))
+                {
+                    string? shareCode = JoinUri.GetShareCode(joinLink);
+
+                    if (!String.IsNullOrEmpty(shareCode))
+                    {
+                        App.Logger.WriteLine(LOG_IDENT, "Resolving the share link...");
+                        target = await ShareLinkResolver.ResolveAsync(shareCode, cookie);
+                    }
+                }
             }
 
             App.Logger.WriteLine(LOG_IDENT, $"Requesting launch ticket for {entry.Username}...");

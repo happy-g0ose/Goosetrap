@@ -2036,4 +2036,10 @@ This will update the matching FastFlag values.</value>
   <data name="Menu.Accounts.AutoRestart.Window.Title" xml:space="preserve">
     <value>Time window (minutes)</value>
   </data>
+  <data name="Menu.Accounts.MaxRam.Description" xml:space="preserve">
+    <value>Restart a client that grows past this much memory - Roblox clients can reach several gigabytes during long sessions. 0 turns the check off.</value>
+  </data>
+  <data name="Menu.Accounts.MaxRam.Title" xml:space="preserve">
+    <value>Memory limit per client (MB)</value>
+  </data>
 </root>

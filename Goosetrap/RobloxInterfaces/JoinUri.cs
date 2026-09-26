@@ -48,6 +48,11 @@ namespace Goosetrap.RobloxInterfaces
 
             string value = input.Trim().Trim('"', '\'');
 
+            // share links carry an opaque code instead of a place id, and that code can contain digits,
+            // so they must be resolved first - never parsed as a place link
+            if (IsShareLink(value))
+                return null;
+
             // roblox://placeId=1234&accessCode=... style deep links
             value = value.Replace("roblox://", "placeId=", StringComparison.OrdinalIgnoreCase);
 

@@ -94,12 +94,15 @@ namespace Goosetrap.Tests
             Assert.Contains(escaped, uri);
         }
 
-        [Theory]
-        [InlineData("https://www.roblox.com/share?code=abc123def456&type=Server", true)]
-        [InlineData("https://www.roblox.com/games/1818", false)]
-        public void Detects_share_links(string link, bool expected)
+        [Fact]
+        public void Share_links_are_never_parsed_as_place_links()
         {
-            Assert.Equal(expected, JoinUri.IsShareLink(link));
+            // the opaque share code contains digits, so parsing it as a place id would send clients
+            // to a completely random place
+            const string shareLink = "https://www.roblox.com/share?code=8a1b2c3d4e5f6789&type=Server";
+
+            Assert.True(JoinUri.IsShareLink(shareLink));
+            Assert.Null(JoinUri.Parse(shareLink));
         }
 
         [Fact]
@@ -107,6 +110,37 @@ namespace Goosetrap.Tests
         {
             Assert.Equal("abc123def456", JoinUri.GetShareCode("https://www.roblox.com/share?code=abc123def456&type=Server"));
             Assert.Null(JoinUri.GetShareCode("https://www.roblox.com/games/1818"));
+        }
+
+        [Theory]
+        [InlineData("{\"privateServerInviteData\":{\"status\":\"Valid\",\"placeId\":1537690962,\"linkCode\":\"37335071446288504650105074256319\",\"accessCode\":\"27e29bd8-0ca1-4b73-ad21-1f68292b2b6c\"}}")]
+        [InlineData("{\"placeId\":1537690962,\"accessCode\":\"27e29bd8-0ca1-4b73-ad21-1f68292b2b6c\"}")]
+        public void Share_link_responses_are_parsed(string json)
+        {
+            var target = ShareLinkResolver.Parse(json);
+
+            Assert.NotNull(target);
+            Assert.Equal(1537690962L, target!.PlaceId);
+            Assert.True(target.IsPrivateServer);
+            // the access code is what the launcher uses, not the human readable link code
+            Assert.Equal("27e29bd8-0ca1-4b73-ad21-1f68292b2b6c", target.PrivateServerLinkCode);
+        }
+
+        [Fact]
+        public void Share_link_response_without_a_place_is_rejected()
+        {
+            Assert.Null(ShareLinkResolver.Parse("{\"status\":\"Invalid\"}"));
+            Assert.Null(ShareLinkResolver.Parse("{}"));
+        }
+
+        [Fact]
+        public void Public_share_link_response_stays_public()
+        {
+            var target = ShareLinkResolver.Parse("{\"experienceInviteData\":{\"placeId\":1818}}");
+
+            Assert.NotNull(target);
+            Assert.Equal(1818L, target!.PlaceId);
+            Assert.False(target.IsPrivateServer);
         }
     }
 }

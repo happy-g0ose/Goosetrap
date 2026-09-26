@@ -85,7 +85,7 @@ namespace Goosetrap.UI.ViewModels.Settings
 
                 var target = JoinUri.Parse(AccountPidRegistry.JoinLink);
 
-                bool started = await AccountsHelper.LaunchAccountAsync(entry, target: target);
+                bool started = await AccountsHelper.LaunchAccountAsync(entry, joinLink: AccountPidRegistry.JoinLink, target: target);
 
                 if (!started)
                     Frontend.ShowMessageBox(Strings.Menu_Accounts_TicketError, MessageBoxImage.Error);
@@ -228,6 +228,25 @@ namespace Goosetrap.UI.ViewModels.Settings
             }
         }
 
+        /// <summary>
+        /// Restart a client once it uses more than this much memory, in megabytes. 0 disables the check.
+        /// </summary>
+        public int MaxClientRamMb
+        {
+            get => App.Settings.Prop.MaxClientRamMb;
+            set
+            {
+                value = Math.Clamp(value, 0, 32768);
+
+                if (App.Settings.Prop.MaxClientRamMb == value)
+                    return;
+
+                App.Settings.Prop.MaxClientRamMb = value;
+                App.Settings.Save();
+                OnPropertyChanged(nameof(MaxClientRamMb));
+            }
+        }
+
         public ICommand SelectAllCommand => new RelayCommand(() => SetSelection(true));
 
         public ICommand UnselectAllCommand => new RelayCommand(() => SetSelection(false));
@@ -250,7 +269,10 @@ namespace Goosetrap.UI.ViewModels.Settings
 
             var target = JoinUri.Parse(JoinLink);
 
-            if (target is null && !String.IsNullOrWhiteSpace(JoinLink))
+            // share links have no place id until they are resolved, which happens per account below
+            bool shareLink = target is null && JoinUri.IsShareLink(JoinLink);
+
+            if (target is null && !shareLink && !String.IsNullOrWhiteSpace(JoinLink))
             {
                 Frontend.ShowMessageBox(Strings.Menu_Accounts_JoinInvalidLink, MessageBoxImage.Warning);
                 return;
@@ -264,7 +286,7 @@ namespace Goosetrap.UI.ViewModels.Settings
                 if (entry is null)
                     continue;
 
-                bool started = await AccountsHelper.LaunchAccountAsync(entry, target: target);
+                bool started = await AccountsHelper.LaunchAccountAsync(entry, joinLink: JoinLink, target: target);
 
                 if (!started)
                 {

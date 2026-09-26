@@ -1702,4 +1702,10 @@ Goosetrap был установлен по адресу "{1}".</value>
   <data name="Menu.Accounts.AutoRestart.Window.Title" xml:space="preserve">
     <value>Окно времени (минуты)</value>
   </data>
+  <data name="Menu.Accounts.MaxRam.Description" xml:space="preserve">
+    <value>Перезапускать клиент, который превысил этот объём памяти — за долгую сессию Roblox легко доходит до нескольких гигабайт. 0 отключает проверку.</value>
+  </data>
+  <data name="Menu.Accounts.MaxRam.Title" xml:space="preserve">
+    <value>Лимит памяти на клиент (МБ)</value>
+  </data>
 </root>

@@ -46,6 +46,12 @@ namespace Goosetrap.UI.ViewModels.Settings
         public bool ClosedByUser { get; set; }
 
         /// <summary>
+        /// Set when Goosetrap closed this client on purpose to bring it back in (memory limit), so the
+        /// crash watcher does not schedule a second restart for it.
+        /// </summary>
+        public bool RestartRequested { get; set; }
+
+        /// <summary>
         /// How much of <see cref="LogFilePath"/> was already parsed, so a refresh only has to look at
         /// the lines that were appended since the last one.
         /// </summary>
@@ -191,6 +197,8 @@ namespace Goosetrap.UI.ViewModels.Settings
 
                         TimeSpan uptime = DateTime.Now - client.Process.StartTime;
                         client.Uptime = string.Format("{0:00}:{1:00}:{2:00}", (int)uptime.TotalHours, uptime.Minutes, uptime.Seconds);
+
+                        CheckClientMemory(client, ramBytes);
                     }
                     catch (Exception ex)
                     {
@@ -455,20 +463,8 @@ namespace Goosetrap.UI.ViewModels.Settings
                 client.ClosedByUser = true;
 
                 App.Logger.WriteLine(LOG_IDENT, $"Forcefully terminating Roblox client PID {client.Pid} ({client.Username})");
-                
-                // Используем taskkill /F для надёжного завершения (обходит Access Denied)
-                var killProc = new Process
-                {
-                    StartInfo = new ProcessStartInfo
-                    {
-                        FileName = "taskkill",
-                        Arguments = $"/F /PID {client.Pid}",
-                        CreateNoWindow = true,
-                        UseShellExecute = false
-                    }
-                };
-                killProc.Start();
-                killProc.WaitForExit(3000);
+
+                TerminateProcess(client.Pid);
             }
             catch (Exception ex)
             {
@@ -510,19 +506,16 @@ namespace Goosetrap.UI.ViewModels.Settings
         }
 
         /// <summary>
-        /// Restarts a client that was launched from the account manager and then disappeared without the
-        /// user closing it - either it crashed or the connection dropped. Limited per account so a
-        /// client that dies on start does not get restarted in an endless loop.
+        /// Brings a client back in when it was closed on purpose (memory limit) or when it disappeared
+        /// without the user closing it (crash, disconnect). Limited per account so a client that dies
+        /// immediately does not get restarted in an endless loop.
         /// </summary>
         private void TryRestartCrashedClient(RobloxClientInfo client)
         {
             const string LOG_IDENT = "ActiveClientsViewModel::TryRestartCrashedClient";
 
-            if (client.ClosedByUser)
+            if (client.ClosedByUser || client.RestartRequested)
                 return;
-
-            if (client.AccountUserId == 0)
-                return; // not started from the account manager, we do not know which account it was
 
             if (!App.Settings.Prop.AutoRestartCrashedClients)
                 return;
@@ -534,6 +527,51 @@ namespace Goosetrap.UI.ViewModels.Settings
                 App.Logger.WriteLine(LOG_IDENT, $"PID {client.Pid} was never in a game, not restarting");
                 return;
             }
+
+            ScheduleRestart(client, "crashed or disconnected");
+        }
+
+        /// <summary>
+        /// Restarts a client whose process is eating too much memory. Independent of the crash watcher
+        /// switch - a configured memory limit is an explicit request to restart such clients.
+        /// </summary>
+        private void CheckClientMemory(RobloxClientInfo client, long ramBytes)
+        {
+            const string LOG_IDENT = "ActiveClientsViewModel::CheckClientMemory";
+
+            int limitMb = App.Settings.Prop.MaxClientRamMb;
+
+            if (limitMb <= 0 || client.RestartRequested)
+                return;
+
+            // only clients we can bring back - a browser launched client has no account behind it
+            if (client.AccountUserId == 0 || client.PlaceId == 0)
+                return;
+
+            if (ramBytes < (long)limitMb * 1024 * 1024)
+                return;
+
+            App.Logger.WriteLine(LOG_IDENT, $"PID {client.Pid} ({client.Username}) is using {ramBytes / 1024 / 1024} MB, limit is {limitMb} MB - restarting it");
+
+            // mark first: the process disappears on the next tick and the crash watcher must not
+            // schedule a second restart for the same client
+            client.RestartRequested = true;
+
+            TerminateProcess(client.Pid);
+
+            ScheduleRestart(client, "memory limit reached");
+        }
+
+        /// <summary>
+        /// Queues a re-join for the account behind the given client, honouring the configured delay,
+        /// attempt limit and time window.
+        /// </summary>
+        private void ScheduleRestart(RobloxClientInfo client, string reason)
+        {
+            const string LOG_IDENT = "ActiveClientsViewModel::ScheduleRestart";
+
+            if (client.AccountUserId == 0)
+                return; // not started from the account manager, we do not know which account it was
 
             var window = TimeSpan.FromMinutes(Math.Max(1, App.Settings.Prop.AutoRestartWindowMinutes));
             int maxAttempts = Math.Max(1, App.Settings.Prop.AutoRestartMaxAttempts);
@@ -568,7 +606,7 @@ namespace Goosetrap.UI.ViewModels.Settings
 
             AccountPidRegistry.LaunchIntent.TryGetValue(client.AccountUserId, out var target);
 
-            App.Logger.WriteLine(LOG_IDENT, $"Restarting {entry.Username} (PID {client.Pid} is gone)");
+            App.Logger.WriteLine(LOG_IDENT, $"Restarting {entry.Username} ({reason}, PID {client.Pid})");
 
             Task.Run(async () =>
             {
@@ -580,6 +618,30 @@ namespace Goosetrap.UI.ViewModels.Settings
                 if (!started)
                     App.Logger.WriteLine(LOG_IDENT, $"Could not restart {entry.Username}");
             });
+        }
+
+        /// <summary>
+        /// Forcefully ends a Roblox process. taskkill is used because it also works when the client is
+        /// running elevated and OpenProcess would be denied.
+        /// </summary>
+        private static void TerminateProcess(int pid)
+        {
+            try
+            {
+                using var killProc = Process.Start(new ProcessStartInfo
+                {
+                    FileName = "taskkill",
+                    Arguments = $"/F /PID {pid}",
+                    CreateNoWindow = true,
+                    UseShellExecute = false
+                });
+
+                killProc?.WaitForExit(5000);
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteLine("ActiveClientsViewModel::TerminateProcess", $"Failed to kill PID {pid}: {ex.Message}");
+            }
         }
 
         private async Task FetchGameNameAsync(RobloxClientInfo client)

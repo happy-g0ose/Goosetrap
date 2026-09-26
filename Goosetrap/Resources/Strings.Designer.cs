@@ -5267,5 +5267,17 @@ namespace Goosetrap.Resources {
                 return ResourceManager.GetString("Menu.Accounts.AutoRestart.Window.Title", resourceCulture);
             }
         }
+        
+        public static string Menu_Accounts_MaxRam_Description {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.MaxRam.Description", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_MaxRam_Title {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.MaxRam.Title", resourceCulture);
+            }
+        }
     }
 }

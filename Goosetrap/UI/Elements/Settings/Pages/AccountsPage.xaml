@@ -53,6 +53,13 @@
         </controls:OptionControl>
 
         <controls:OptionControl
+            Header="{x:Static resources:Strings.Menu_Accounts_MaxRam_Title}"
+            Description="{x:Static resources:Strings.Menu_Accounts_MaxRam_Description}">
+            <ui:NumberBox Width="140" Min="0" Max="32768" Step="256" IntegersOnly="True"
+                          Value="{Binding MaxClientRamMb, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <controls:OptionControl
             Header="{x:Static resources:Strings.Menu_Accounts_AutoRestart_OnlyIfJoined_Title}"
             Description="{x:Static resources:Strings.Menu_Accounts_AutoRestart_OnlyIfJoined_Description}">
             <ui:ToggleSwitch IsChecked="{Binding AutoRestartOnlyIfJoined, Mode=TwoWay}" />
