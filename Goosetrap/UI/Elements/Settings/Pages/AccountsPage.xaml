@@ -7,6 +7,7 @@
       xmlns:resources="clr-namespace:Goosetrap.Resources"
       xmlns:local="clr-namespace:Goosetrap.UI.ViewModels.Settings"
       xmlns:converters="clr-namespace:Goosetrap.UI.Converters"
+      xmlns:controls="clr-namespace:Goosetrap.UI.Elements.Controls"
       mc:Ignorable="d"
       d:DesignHeight="600" d:DesignWidth="800"
       Title="AccountsPage"
@@ -23,6 +24,36 @@
         <ui:CardAction Margin="0,0,0,16" Icon="Add24" Command="{Binding AddAccountCommand}">
             <TextBlock Text="{x:Static resources:Strings.Menu_Accounts_AddAccount}" VerticalAlignment="Center" FontWeight="SemiBold" />
         </ui:CardAction>
+
+        <controls:OptionControl
+            Header="{x:Static resources:Strings.Menu_Accounts_AutoRestart_Title}"
+            Description="{x:Static resources:Strings.Menu_Accounts_AutoRestart_Description}">
+            <ui:ToggleSwitch IsChecked="{Binding AutoRestartCrashedClients, Mode=TwoWay}" />
+        </controls:OptionControl>
+
+        <!-- Join a game / private server with the selected accounts -->
+        <Border BorderThickness="1" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" CornerRadius="8" Padding="16" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" Margin="0,0,0,16">
+            <StackPanel>
+                <TextBlock Text="{x:Static resources:Strings.Menu_Accounts_JoinLink_Title}" FontSize="14" FontWeight="SemiBold" />
+                <TextBlock Text="{x:Static resources:Strings.Menu_Accounts_JoinLink_Description}" FontSize="12" TextWrapping="Wrap" Margin="0,2,0,10"
+                           Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+
+                <ui:TextBox Margin="0,0,0,10" Text="{Binding JoinLink, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            PlaceholderText="{x:Static resources:Strings.Menu_Accounts_JoinLink_Placeholder}" />
+
+                <WrapPanel Orientation="Horizontal">
+                    <ui:Button Icon="Play24" Appearance="Primary" Margin="0,0,10,8" Padding="12,8"
+                               Content="{x:Static resources:Strings.Menu_Accounts_JoinSelected}"
+                               Command="{Binding JoinSelectedCommand}" />
+                    <ui:Button Icon="CheckmarkCircle24" Margin="0,0,10,8" Padding="12,8"
+                               Content="{x:Static resources:Strings.Menu_Accounts_SelectAll}"
+                               Command="{Binding SelectAllCommand}" />
+                    <ui:Button Icon="DismissCircle24" Margin="0,0,0,8" Padding="12,8"
+                               Content="{x:Static resources:Strings.Menu_Accounts_UnselectAll}"
+                               Command="{Binding UnselectAllCommand}" />
+                </WrapPanel>
+            </StackPanel>
+        </Border>
 
         <TextBlock Text="{x:Static resources:Strings.Menu_Accounts_SavedAccounts}" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,12" />
 
@@ -64,6 +95,9 @@
 
                             <!-- Circular Avatar Headshot -->
                             <Grid Grid.Row="0" Margin="0,8,0,12">
+                                <!-- Selection checkbox (used by "join with selected accounts") -->
+                                <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,-4,0,0"
+                                          ToolTip="{x:Static resources:Strings.Menu_Accounts_JoinLink_Title}" />
                                 <Border Width="80" Height="80" CornerRadius="40" HorizontalAlignment="Center" BorderThickness="2" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}">
                                     <Border.Background>
                                         <ImageBrush ImageSource="{Binding AvatarUri, FallbackValue='pack://application:,,,/Goosetrap.png'}" />

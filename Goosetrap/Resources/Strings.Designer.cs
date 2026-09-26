@@ -5159,5 +5159,65 @@ namespace Goosetrap.Resources {
                 return ResourceManager.GetString("Menu.FastFlagEditor.Presets.Ultra", resourceCulture);
             }
         }
+        
+        public static string Menu_Accounts_AutoRestart_Description {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.AutoRestart.Description", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_AutoRestart_Title {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.AutoRestart.Title", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_JoinInvalidLink {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.JoinInvalidLink", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_JoinLink_Description {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.JoinLink.Description", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_JoinLink_Placeholder {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.JoinLink.Placeholder", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_JoinLink_Title {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.JoinLink.Title", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_JoinNoneSelected {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.JoinNoneSelected", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_JoinSelected {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.JoinSelected", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_SelectAll {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.SelectAll", resourceCulture);
+            }
+        }
+        
+        public static string Menu_Accounts_UnselectAll {
+            get {
+                return ResourceManager.GetString("Menu.Accounts.UnselectAll", resourceCulture);
+            }
+        }
     }
 }

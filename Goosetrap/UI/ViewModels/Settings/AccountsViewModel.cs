@@ -10,18 +10,12 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Goosetrap.Models.Persistable;
+using Goosetrap.RobloxInterfaces;
 using Goosetrap.UI.Elements.Dialogs;
 using Goosetrap.Utility;
 
 namespace Goosetrap.UI.ViewModels.Settings
 {
-    // Маппинг тикета (gameinfo) → данные аккаунта
-    // Тикет сохраняется в аргументах командной строки даже если Roblox перезапустит процесс
-    public static class AccountPidRegistry
-    {
-        public static readonly Dictionary<string, (string Username, string DisplayName, long UserId)> TicketMap = new();
-    }
-
     public class AccountUIModel : NotifyPropertyChangedViewModel
     {
         public string Username { get; set; } = "";
@@ -41,6 +35,20 @@ namespace Goosetrap.UI.ViewModels.Settings
                     OnPropertyChanged(nameof(IsRunning));
                     OnPropertyChanged(nameof(StatusText));
                     OnPropertyChanged(nameof(StatusColor));
+                }
+            }
+        }
+
+        private bool _isSelected;
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set
+            {
+                if (_isSelected != value)
+                {
+                    _isSelected = value;
+                    OnPropertyChanged(nameof(IsSelected));
                 }
             }
         }
@@ -75,37 +83,12 @@ namespace Goosetrap.UI.ViewModels.Settings
                 var entry = App.Accounts.Prop.Accounts.FirstOrDefault(x => x.UserId == UserId);
                 if (entry == null) return;
 
-                string cookie = AccountsHelper.Decrypt(entry.EncryptedCookie);
-                if (string.IsNullOrEmpty(cookie))
-                {
-                    Frontend.ShowMessageBox(Strings.Menu_Accounts_DecryptError, MessageBoxImage.Error);
-                    return;
-                }
+                var target = JoinUri.Parse(AccountPidRegistry.JoinLink);
 
-                App.Logger.WriteLine(LOG_IDENT, $"Requesting launch ticket for {Username}...");
-                string ticket = await AccountsHelper.GetLaunchTicketAsync(cookie);
-                if (string.IsNullOrEmpty(ticket))
-                {
+                bool started = await AccountsHelper.LaunchAccountAsync(entry, target: target);
+
+                if (!started)
                     Frontend.ShowMessageBox(Strings.Menu_Accounts_TicketError, MessageBoxImage.Error);
-                    return;
-                }
-
-                // Запускаем Roblox через наш бутстраппер Goosetrap.exe с указанием ID аккаунта для отложенной авторизации
-                string launchArgs = $"--app --gameinfo={ticket} --launchtime={DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}";
-                App.Logger.WriteLine(LOG_IDENT, $"Launching Roblox via Goosetrap bootstrapper for {Username}...");
-
-                var proc = Process.Start(new ProcessStartInfo
-                {
-                    FileName = Paths.Process,
-                    Arguments = $"-player \"{launchArgs}\" -account {UserId}",
-                    WorkingDirectory = Path.GetDirectoryName(Paths.Process),
-                    UseShellExecute = false
-                });
-
-                // Регистрируем тикет → аккаунт, чтобы ActiveClients отображал правильное имя
-                // Тикет остаётся в командной строке даже если Roblox перезапустит процесс с новым PID
-                AccountPidRegistry.TicketMap[ticket] = (Username, DisplayName, UserId);
-                App.Logger.WriteLine(LOG_IDENT, $"Registered ticket for account {Username}");
             }
             catch (Exception ex)
             {
@@ -134,6 +117,91 @@ namespace Goosetrap.UI.ViewModels.Settings
         public ObservableCollection<AccountUIModel> Accounts { get; } = new();
 
         public ICommand AddAccountCommand => new RelayCommand(AddAccount);
+
+        /// <summary>
+        /// Game or private server link the selected accounts should be launched into. Empty means the
+        /// clients are only started and signed in.
+        /// </summary>
+        public string JoinLink
+        {
+            get => AccountPidRegistry.JoinLink;
+            set
+            {
+                if (AccountPidRegistry.JoinLink == value)
+                    return;
+
+                AccountPidRegistry.JoinLink = value ?? "";
+                OnPropertyChanged(nameof(JoinLink));
+            }
+        }
+
+        public ICommand JoinSelectedCommand => new AsyncRelayCommand(JoinSelectedAsync);
+
+        /// <summary>
+        /// Restart clients that were started from here and then closed unexpectedly.
+        /// </summary>
+        public bool AutoRestartCrashedClients
+        {
+            get => App.Settings.Prop.AutoRestartCrashedClients;
+            set
+            {
+                if (App.Settings.Prop.AutoRestartCrashedClients == value)
+                    return;
+
+                App.Settings.Prop.AutoRestartCrashedClients = value;
+                App.Settings.Save();
+                OnPropertyChanged(nameof(AutoRestartCrashedClients));
+            }
+        }
+
+        public ICommand SelectAllCommand => new RelayCommand(() => SetSelection(true));
+
+        public ICommand UnselectAllCommand => new RelayCommand(() => SetSelection(false));
+
+        private void SetSelection(bool selected)
+        {
+            foreach (var account in Accounts)
+                account.IsSelected = selected;
+        }
+
+        private async Task JoinSelectedAsync()
+        {
+            var selected = Accounts.Where(x => x.IsSelected).ToList();
+
+            if (!selected.Any())
+            {
+                Frontend.ShowMessageBox(Strings.Menu_Accounts_JoinNoneSelected, MessageBoxImage.Information);
+                return;
+            }
+
+            var target = JoinUri.Parse(JoinLink);
+
+            if (target is null && !String.IsNullOrWhiteSpace(JoinLink))
+            {
+                Frontend.ShowMessageBox(Strings.Menu_Accounts_JoinInvalidLink, MessageBoxImage.Warning);
+                return;
+            }
+
+            App.Logger.WriteLine("AccountsViewModel::JoinSelected", $"Joining with {selected.Count} account(s)");
+
+            foreach (var account in selected)
+            {
+                var entry = App.Accounts.Prop.Accounts.FirstOrDefault(x => x.UserId == account.UserId);
+                if (entry is null)
+                    continue;
+
+                bool started = await AccountsHelper.LaunchAccountAsync(entry, target: target);
+
+                if (!started)
+                {
+                    App.Logger.WriteLine("AccountsViewModel::JoinSelected", $"Could not launch {account.Username}");
+                    continue;
+                }
+
+                // give the bootstrapper the chance to grab the launch slot before the next ticket is requested
+                await Task.Delay(1500);
+            }
+        }
 
         public AccountsViewModel()
         {

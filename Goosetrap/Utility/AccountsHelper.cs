@@ -7,6 +7,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
+using Goosetrap.RobloxInterfaces;
+
 namespace Goosetrap.Utility
 {
     public static class AccountsHelper
@@ -185,6 +187,79 @@ namespace Goosetrap.Utility
             }
             return "";
         }
+        /// <summary>
+        /// Launches one account through the Goosetrap bootstrapper.
+        ///
+        /// When a join link is given the client is started with a proper roblox-player uri, so it
+        /// authenticates with the ticket of this account and joins the requested place. The bootstrapper
+        /// holds a system wide semaphore until the client has authenticated, which keeps the shared
+        /// RobloxCookies.dat from being overwritten by the next account in the meantime.
+        /// </summary>
+        /// <returns>true when the bootstrapper process was started.</returns>
+        public static async Task<bool> LaunchAccountAsync(AccountEntry entry, string? joinLink = null, JoinTarget? target = null)
+        {
+            const string LOG_IDENT = "AccountsHelper::LaunchAccount";
+
+            if (entry is null)
+                return false;
+
+            if (target is null && !String.IsNullOrWhiteSpace(joinLink))
+                target = JoinUri.Parse(joinLink);
+
+            string cookie = Decrypt(entry.EncryptedCookie);
+            if (string.IsNullOrEmpty(cookie))
+            {
+                App.Logger.WriteLine(LOG_IDENT, $"Could not decrypt the cookie of {entry.Username}");
+                return false;
+            }
+
+            App.Logger.WriteLine(LOG_IDENT, $"Requesting launch ticket for {entry.Username}...");
+            string ticket = await GetLaunchTicketAsync(cookie);
+
+            if (string.IsNullOrEmpty(ticket))
+            {
+                App.Logger.WriteLine(LOG_IDENT, $"Did not get a launch ticket for {entry.Username}");
+                return false;
+            }
+
+            AccountPidRegistry.TicketMap[ticket] = (entry.Username, entry.DisplayName, entry.UserId);
+
+            var launchArgs = new StringBuilder();
+
+            if (target is not null)
+            {
+                launchArgs.Append(JoinUri.Build(ticket, target, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()));
+            }
+            else
+            {
+                // no place requested - just start the app authenticated as this account
+                launchArgs.Append($"roblox-player:1+launchmode:play+gameinfo:{ticket}");
+                launchArgs.Append($"+launchtime:{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}");
+                launchArgs.Append("+robloxLocale:en_us+gameLocale:en_us+LaunchExp:InApp");
+            }
+
+            App.Logger.WriteLine(LOG_IDENT, $"Launching Roblox via Goosetrap bootstrapper for {entry.Username}{(target is null ? "" : $" ({target.DisplayName})")}...");
+
+            var proc = Process.Start(new ProcessStartInfo
+            {
+                FileName = Paths.Process,
+                Arguments = $"-player \"{launchArgs}\" -account {entry.UserId}",
+                WorkingDirectory = Path.GetDirectoryName(Paths.Process),
+                UseShellExecute = false
+            });
+
+            if (proc is null)
+            {
+                App.Logger.WriteLine(LOG_IDENT, "Failed to start the bootstrapper");
+                return false;
+            }
+
+            AccountPidRegistry.LaunchIntent[entry.UserId] = target;
+            App.Logger.WriteLine(LOG_IDENT, $"Registered ticket for account {entry.Username}");
+
+            return true;
+        }
+
         /// <summary>
         /// Записывает .ROBLOSECURITY cookie в локальное хранилище Roblox Desktop App
         /// чтобы при запуске через Аккаунты пользователь был автоматически авторизован.

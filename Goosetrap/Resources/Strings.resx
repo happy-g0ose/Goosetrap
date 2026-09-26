@@ -1982,4 +1982,34 @@ This will update the matching FastFlag values.</value>
   <data name="Menu.FastFlagEditor.Presets.Ultra" xml:space="preserve">
     <value>Ultra graphics</value>
   </data>
+  <data name="Menu.Accounts.AutoRestart.Description" xml:space="preserve">
+    <value>If a client that was started from here closes unexpectedly, sign that account back in automatically.</value>
+  </data>
+  <data name="Menu.Accounts.AutoRestart.Title" xml:space="preserve">
+    <value>Restart crashed clients</value>
+  </data>
+  <data name="Menu.Accounts.JoinInvalidLink" xml:space="preserve">
+    <value>Could not find a place id in that link. Paste a game link, a private server link or a place id.</value>
+  </data>
+  <data name="Menu.Accounts.JoinLink.Description" xml:space="preserve">
+    <value>Paste a game or private server link, tick the accounts you want and they will all join it.</value>
+  </data>
+  <data name="Menu.Accounts.JoinLink.Placeholder" xml:space="preserve">
+    <value>https://www.roblox.com/games/...?privateServerLinkCode=...</value>
+  </data>
+  <data name="Menu.Accounts.JoinLink.Title" xml:space="preserve">
+    <value>Join a server with your accounts</value>
+  </data>
+  <data name="Menu.Accounts.JoinNoneSelected" xml:space="preserve">
+    <value>Select at least one account first!</value>
+  </data>
+  <data name="Menu.Accounts.JoinSelected" xml:space="preserve">
+    <value>Join with selected accounts</value>
+  </data>
+  <data name="Menu.Accounts.SelectAll" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="Menu.Accounts.UnselectAll" xml:space="preserve">
+    <value>Clear selection</value>
+  </data>
 </root>

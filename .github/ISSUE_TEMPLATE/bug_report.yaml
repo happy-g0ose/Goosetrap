@@ -7,7 +7,7 @@ body:
     attributes:
       label: Goosetrap Version
       description: "What version of Goosetrap are you using?"
-      placeholder: "v1.3.1.0"
+      placeholder: "v1.4.0.0"
     validations:
       required: true
   - type: textarea

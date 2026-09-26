@@ -44,5 +44,8 @@ namespace Goosetrap.Models.Persistable
 
         // mod preset configuration
         public bool UseDisableAppPatch { get; set; } = false;
+
+        // account manager
+        public bool AutoRestartCrashedClients { get; set; } = false;
     }
 }

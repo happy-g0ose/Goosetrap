@@ -35,6 +35,16 @@ namespace Goosetrap.UI.ViewModels.Settings
         public long UniverseId { get; set; }
         public string? LogFilePath { get; set; } = "";
 
+        /// <summary>
+        /// Roblox account this client belongs to, 0 when it was not started from the account manager.
+        /// </summary>
+        public long AccountUserId { get; set; }
+
+        /// <summary>
+        /// Set when the user closed this client on purpose, so the crash watcher does not restart it.
+        /// </summary>
+        public bool ClosedByUser { get; set; }
+
         public string Username
         {
             get => _username;
@@ -100,6 +110,11 @@ namespace Goosetrap.UI.ViewModels.Settings
         private readonly DispatcherTimer _timer;
         private static readonly Dictionary<long, string> GameNameCache = new();
 
+        // crash watch: how often an account was restarted inside the current window
+        private static readonly Dictionary<long, (int Attempts, DateTime WindowStart)> RestartHistory = new();
+        private static readonly TimeSpan RestartWindow = TimeSpan.FromMinutes(15);
+        private const int MaxRestartsPerWindow = 3;
+
         public ObservableCollection<RobloxClientInfo> Clients { get; } = new();
 
         public ICommand RefreshCommand => new RelayCommand(Refresh);
@@ -136,9 +151,12 @@ namespace Goosetrap.UI.ViewModels.Settings
                 // 1. Remove clients that are no longer running
                 for (int i = Clients.Count - 1; i >= 0; i--)
                 {
-                    if (!runningPids.Contains(Clients[i].Pid))
+                    var goneClient = Clients[i];
+
+                    if (!runningPids.Contains(goneClient.Pid))
                     {
                         Clients.RemoveAt(i);
+                        TryRestartCrashedClient(goneClient);
                     }
                 }
 
@@ -187,6 +205,10 @@ namespace Goosetrap.UI.ViewModels.Settings
                             existingClient.DisplayName = logData.displayName;
                         }
 
+                        // remember which account this client belongs to, so the crash watcher can restart it
+                        if (existingClient.AccountUserId == 0 && logData.userId != 0)
+                            existingClient.AccountUserId = logData.userId;
+
                         if (!string.IsNullOrEmpty(logData.logFilePath) && string.IsNullOrEmpty(existingClient.LogFilePath)) 
                         {
                             existingClient.LogFilePath = logData.logFilePath;
@@ -232,6 +254,7 @@ namespace Goosetrap.UI.ViewModels.Settings
                     string displayName = Strings.Menu_ActiveClients_Unknown;
                     long placeId = 0;
                     long universeId = 0;
+                    long accountUserId = 0;
                     bool foundByTicket = false;
                     
                     // Ищем тикет в аргументах: --gameinfo=TICKET
@@ -245,6 +268,7 @@ namespace Goosetrap.UI.ViewModels.Settings
                             {
                                 username = accountInfo.Username;
                                 displayName = accountInfo.DisplayName;
+                                accountUserId = accountInfo.UserId;
                                 foundByTicket = true;
                             }
                         }
@@ -252,9 +276,11 @@ namespace Goosetrap.UI.ViewModels.Settings
 
                     // Фолбэк: парсим лог-файл (для запусков через сайт)
                     string? logFilePath = "";
+                    long parsedUserId = 0;
+
                     if (!foundByTicket)
                     {
-                        (username, displayName, placeId, universeId, logFilePath) = ParseLogFile(process, usedLogs);
+                        (username, displayName, placeId, universeId, logFilePath, parsedUserId) = ParseLogFile(process, usedLogs);
                     }
                     else
                     {
@@ -263,6 +289,7 @@ namespace Goosetrap.UI.ViewModels.Settings
                         placeId = logData.placeId;
                         universeId = logData.universeId;
                         logFilePath = logData.logFilePath;
+                        parsedUserId = logData.userId;
                     }
 
                     if (!string.IsNullOrEmpty(logFilePath))
@@ -281,7 +308,8 @@ namespace Goosetrap.UI.ViewModels.Settings
                         UniverseId = universeId,
                         Username = username,
                         DisplayName = displayName,
-                        LogFilePath = logFilePath
+                        LogFilePath = logFilePath,
+                        AccountUserId = foundByTicket ? accountUserId : parsedUserId
                     };
 
                     try
@@ -324,6 +352,9 @@ namespace Goosetrap.UI.ViewModels.Settings
             const string LOG_IDENT = "ActiveClientsViewModel::KillClient";
             try
             {
+                // mark it as closed on purpose so the crash watcher leaves it alone
+                client.ClosedByUser = true;
+
                 App.Logger.WriteLine(LOG_IDENT, $"Forcefully terminating Roblox client PID {client.Pid} ({client.Username})");
                 
                 // Используем taskkill /F для надёжного завершения (обходит Access Denied)
@@ -377,6 +408,68 @@ namespace Goosetrap.UI.ViewModels.Settings
             {
                 App.Logger.WriteLine(LOG_IDENT, $"Failed to reconnect client: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Restarts a client that was launched from the account manager and then disappeared without the
+        /// user closing it - either it crashed or the connection dropped. Limited per account so a
+        /// client that dies on start does not get restarted in an endless loop.
+        /// </summary>
+        private void TryRestartCrashedClient(RobloxClientInfo client)
+        {
+            const string LOG_IDENT = "ActiveClientsViewModel::TryRestartCrashedClient";
+
+            if (client.ClosedByUser)
+                return;
+
+            if (client.AccountUserId == 0)
+                return; // not started from the account manager, we do not know which account it was
+
+            if (!App.Settings.Prop.AutoRestartCrashedClients)
+                return;
+
+            lock (RestartHistory)
+            {
+                if (RestartHistory.TryGetValue(client.AccountUserId, out var history))
+                {
+                    if (DateTime.UtcNow - history.WindowStart > RestartWindow)
+                        history = (0, DateTime.UtcNow);
+                    else if (history.Attempts >= MaxRestartsPerWindow)
+                    {
+                        App.Logger.WriteLine(LOG_IDENT, $"Gave up restarting account {client.AccountUserId}, too many restarts");
+                        return;
+                    }
+                }
+                else
+                {
+                    history = (0, DateTime.UtcNow);
+                }
+
+                RestartHistory[client.AccountUserId] = (history.Attempts + 1, history.WindowStart);
+            }
+
+            var entry = App.Accounts.Prop.Accounts.FirstOrDefault(x => x.UserId == client.AccountUserId);
+
+            if (entry is null)
+            {
+                App.Logger.WriteLine(LOG_IDENT, $"Account {client.AccountUserId} is no longer saved, not restarting");
+                return;
+            }
+
+            AccountPidRegistry.LaunchIntent.TryGetValue(client.AccountUserId, out var target);
+
+            App.Logger.WriteLine(LOG_IDENT, $"Restarting {entry.Username} (PID {client.Pid} is gone)");
+
+            Task.Run(async () =>
+            {
+                // let Roblox clean up before the next client takes the launch slot
+                await Task.Delay(5000);
+
+                bool started = await Goosetrap.Utility.AccountsHelper.LaunchAccountAsync(entry, target: target);
+
+                if (!started)
+                    App.Logger.WriteLine(LOG_IDENT, $"Could not restart {entry.Username}");
+            });
         }
 
         private async Task FetchGameNameAsync(RobloxClientInfo client)
@@ -494,12 +587,13 @@ namespace Goosetrap.UI.ViewModels.Settings
             return null;
         }
 
-        private static (string username, string displayName, long placeId, long universeId, string? logFilePath) ParseLogFile(Process process, HashSet<string> usedLogs, string? preExistingLogPath = null)
+        private static (string username, string displayName, long placeId, long universeId, string? logFilePath, long userId) ParseLogFile(Process process, HashSet<string> usedLogs, string? preExistingLogPath = null)
         {
             string username = Strings.Menu_ActiveClients_Unknown;
             string displayName = Strings.Menu_ActiveClients_Unknown;
             long placeId = 0;
             long universeId = 0;
+            long parsedUserId = 0;
             string? logPath = !string.IsNullOrEmpty(preExistingLogPath) ? preExistingLogPath : FindLogFileForProcess(process, usedLogs);
 
             try
@@ -515,7 +609,6 @@ namespace Goosetrap.UI.ViewModels.Settings
                     using var sr = new StreamReader(fs);
                     
                     string? line;
-                    long parsedUserId = 0;
                     while ((line = sr.ReadLine()) != null)
                     {
                         var placeMatch = placeIdRegex.Match(line);
@@ -560,7 +653,7 @@ namespace Goosetrap.UI.ViewModels.Settings
                 App.Logger.WriteLine("ActiveClientsViewModel", $"Failed to parse log file for PID {process.Id}: {ex.Message}");
             }
 
-            return (username, displayName, placeId, universeId, logPath);
+            return (username, displayName, placeId, universeId, logPath, parsedUserId);
         }
     }
 }

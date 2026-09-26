@@ -1648,4 +1648,34 @@ Goosetrap был установлен по адресу "{1}".</value>
   <data name="Menu.FastFlagEditor.Presets.Ultra" xml:space="preserve">
     <value>Ultra Graphics (Ультра)</value>
   </data>
+  <data name="Menu.Accounts.AutoRestart.Description" xml:space="preserve">
+    <value>Если клиент, запущенный отсюда, неожиданно закроется — автоматически зайти этим аккаунтом снова.</value>
+  </data>
+  <data name="Menu.Accounts.AutoRestart.Title" xml:space="preserve">
+    <value>Перезапускать вылетевшие клиенты</value>
+  </data>
+  <data name="Menu.Accounts.JoinInvalidLink" xml:space="preserve">
+    <value>Не удалось найти place id в ссылке. Вставьте ссылку на игру, приватный сервер или сам place id.</value>
+  </data>
+  <data name="Menu.Accounts.JoinLink.Description" xml:space="preserve">
+    <value>Вставьте ссылку на игру или приватный сервер, отметьте нужные аккаунты — они все зайдут в него.</value>
+  </data>
+  <data name="Menu.Accounts.JoinLink.Placeholder" xml:space="preserve">
+    <value>https://www.roblox.com/games/...?privateServerLinkCode=...</value>
+  </data>
+  <data name="Menu.Accounts.JoinLink.Title" xml:space="preserve">
+    <value>Заход на сервер со своих аккаунтов</value>
+  </data>
+  <data name="Menu.Accounts.JoinNoneSelected" xml:space="preserve">
+    <value>Сначала выберите хотя бы один аккаунт!</value>
+  </data>
+  <data name="Menu.Accounts.JoinSelected" xml:space="preserve">
+    <value>Зайти со всех выбранных аккаунтов</value>
+  </data>
+  <data name="Menu.Accounts.SelectAll" xml:space="preserve">
+    <value>Выбрать все</value>
+  </data>
+  <data name="Menu.Accounts.UnselectAll" xml:space="preserve">
+    <value>Снять выбор</value>
+  </data>
 </root>
