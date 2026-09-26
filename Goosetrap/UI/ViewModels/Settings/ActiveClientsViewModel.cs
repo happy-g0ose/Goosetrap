@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 
 using CommunityToolkit.Mvvm.Input;
+using Goosetrap.RobloxInterfaces;
 using Goosetrap.Utility;
 
 namespace Goosetrap.UI.ViewModels.Settings
@@ -605,6 +606,10 @@ namespace Goosetrap.UI.ViewModels.Settings
             }
 
             AccountPidRegistry.LaunchIntent.TryGetValue(client.AccountUserId, out var target);
+
+            // fall back to whatever place the client was in - better than only signing in again
+            if (target is null && client.PlaceId != 0)
+                target = new JoinTarget(client.PlaceId, null);
 
             App.Logger.WriteLine(LOG_IDENT, $"Restarting {entry.Username} ({reason}, PID {client.Pid})");
 

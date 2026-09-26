@@ -270,6 +270,8 @@ namespace Goosetrap.Utility
             }
 
             AccountPidRegistry.LaunchIntent[entry.UserId] = target;
+            AccountPidRegistry.SaveLaunchIntent();
+
             App.Logger.WriteLine(LOG_IDENT, $"Registered ticket for account {entry.Username}");
 
             return true;
